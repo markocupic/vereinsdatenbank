@@ -1,0 +1,47 @@
+<div id="comparingForm">
+<div class="formbody">
+
+<form action="<?php echo $this->action; ?>" method="post" enctype="application/x-www-form-urlencoded">
+    <input type="hidden" name="FORM_SUBMIT" value="member_staging"/>
+    <input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>"/>
+    <input type="hidden" name="modified_fields" value="<?php echo $this->modifiedFields; ?>"/>
+
+<table>
+    <tr class="head">
+        <th class="col_0">
+            <div class="submit_container">
+                <input type="submit" class="submit" name="adopt" value="<?php echo $GLOBALS['TL_LANG']['vereinsdatenbank']['be']['button']['adopt_changes']; ?>">
+                <input type="submit" class="submit" name="discard" value="<?php echo $GLOBALS['TL_LANG']['vereinsdatenbank']['be']['button']['discard_changes']; ?>">
+            </div>
+        </th>
+        <th class="col_1">&nbsp;</th>
+    </tr>
+    <?php foreach ($this->arrDataRecord as $fieldname => $arrValue): ?>
+    <tr class="row_0">
+        <td class="col_0">
+            <h3><?php echo $arrValue['label']; ?>:<h3>
+        </td>
+        <td class="col_1">&nbsp;</td>
+    </tr>
+<tr>
+    <td class="col_0 red">
+        <div style="display:block; color:black; padding:5px; background-color:#FFD2D2; margin:5px 0; width:90%">
+            <?php echo $arrValue['inputFieldCurrent']; ?>
+        </div>
+    </td>
+    <td class="col_1"><input type="radio" name="group_<?php echo $fieldname; ?>" value="discard_modification" ></td>
+</tr>
+<tr>
+    <td class="col_0 green">
+        <div style="display:block; color:black; padding:5px; background-color:#EBFDD7; margin:5px 0; width:90%">
+            <?php echo $arrValue['inputFieldNew']; ?>
+        </div>
+    </td>
+    <td class="col_1"><input type="radio" name="group_<?php echo $fieldname; ?>" value="adopt_modification" checked></td>
+</tr>
+    <?php endforeach; ?>
+</table>
+    <submit></submit>
+</form>
+</div>
+</div>

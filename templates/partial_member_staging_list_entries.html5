@@ -1,0 +1,8 @@
+
+    <?php if ($this->arrRows): ?>
+    <table>
+    <?php foreach ($this->arrRows as $arrRow): ?>
+<tr><td><?php echo $arrRow['vdb_vereinsname']; ?></td><td class="watch"><a href="contao/main.php?do=member_staging&action=show_entry&id=<?php echo $arrRow['pid']; ?>" title="merge"><img src="system/modules/vereinsdatenbank/assets/images/find.png" alt="merge"/></a></td></tr>
+    <?php endforeach; ?>
+    </table>
+    <?php endif; ?>

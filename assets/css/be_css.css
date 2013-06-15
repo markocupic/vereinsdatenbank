@@ -1,0 +1,42 @@
+#memberStage {
+    padding: 10px;
+}
+
+#comparingForm .col_0 label {
+    display: none;
+}
+
+#comparingForm .row_0 td {
+    padding-top: 20px;
+}
+
+#comparingForm .select,
+#comparingForm .text {
+    width: 70%;
+}
+
+#comparingForm table {
+      width: 80%
+}
+#comparingForm .col_0 {
+    width: 90%
+}
+#comparingForm .col_1 {
+    width: 10%
+}
+
+#comparingForm th {
+    border-top: 1px solid #666;
+    border-bottom: 1px solid #666;
+    padding: 15px 0;
+    width: 80%
+
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}

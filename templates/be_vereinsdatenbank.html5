@@ -1,0 +1,13 @@
+<div id="memberStage" class="">
+<h2><?php echo $this->headline; ?></h2>
+
+<?php if($this->systemMessages): ?>
+    <div class="systemMessage">
+<?php foreach($this->systemMessages as $message): ?>
+        <p><?php echo $message; ?></p>
+<?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<?php echo $this->partial; ?>
+</div>
