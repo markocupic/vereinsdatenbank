@@ -37,6 +37,7 @@ CREATE TABLE `tl_member` (
   `vdb_nachrichten_erlauben` char(1) NOT NULL default '',
   `vdb_bild` varchar(255) NOT NULL default '',
   `vdb_grund_der_loeschung` text NULL,
+  `vdb_agb` char(1) NOT NULL default '',
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 

@@ -92,62 +92,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_vereinsname'] = array
     'inputType' => 'text',
     'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'personal', 'tl_class' => '')
 );
-/**
-$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_ansprechpartner_vorname'] = array
-(
-    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_ansprechpartner_vorname'],
-    'exclude' => true,
-    'search' => true,
-    'sorting' => true,
-    'flag' => 1,
-    'inputType' => 'text',
-    'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'personal', 'tl_class' => '')
-);
 
-$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_ansprechpartner_nachname'] = array
-(
-    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_ansprechpartner_nachname'],
-    'exclude' => true,
-    'search' => true,
-    'sorting' => true,
-    'flag' => 1,
-    'inputType' => 'text',
-    'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'personal', 'tl_class' => '')
-);
-
-$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_ansprechpartner_strasse'] = array
-(
-    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_ansprechpartner_strasse'],
-    'exclude' => true,
-    'search' => true,
-    'sorting' => true,
-    'flag' => 1,
-    'inputType' => 'text',
-    'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'address', 'tl_class' => '')
-);
-
-$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_ansprechpartner_plz'] = array
-(
-    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_ansprechpartner_plz'],
-    'exclude' => true,
-    'search' => true,
-    'sorting' => true,
-    'flag' => 1,
-    'inputType' => 'text',
-    'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'address', 'tl_class' => '', 'rgxp' => 'digit')
-);
-
-$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_ansprechpartner_ort'] = array
-(
-    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_ansprechpartner_ort'],
-    'exclude' => true,
-    'search' => true,
-    'sorting' => true,
-    'flag' => 1,
-    'inputType' => 'text',
-    'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'address', 'tl_class' => '')
-);
-*/
 $GLOBALS['TL_DCA']['tl_member']['fields']['country'] = array
 (
     'label' => &$GLOBALS['TL_LANG']['tl_member']['country'],
@@ -159,40 +104,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['country'] = array
     'options' => array('de', 'fr', 'ch'),
     'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'address', 'tl_class' => '')
 );
-/**
-$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_ansprechpartner_phone'] = array
-(
-    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_ansprechpartner_phone'],
-    'exclude' => true,
-    'search' => true,
-    'sorting' => true,
-    'flag' => 1,
-    'inputType' => 'text',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'address', 'tl_class' => '')
-);
 
-$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_ansprechpartner_fax'] = array
-(
-    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_ansprechpartner_fax'],
-    'exclude' => true,
-    'search' => true,
-    'sorting' => true,
-    'flag' => 1,
-    'inputType' => 'text',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'address', 'tl_class' => '')
-);
-
-$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_ansprechpartner_website'] = array
-(
-    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_ansprechpartner_website'],
-    'exclude' => true,
-    'search' => true,
-    'sorting' => true,
-    'flag' => 1,
-    'inputType' => 'text',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'address', 'tl_class' => '')
-);
-*/
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_aktiv_engagierte_mitglieder'] = array
 (
     'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_aktiv_engagierte_mitglieder'],
@@ -335,5 +247,17 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_grund_der_loeschung'] = array
     'inputType' => 'textarea',
     'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '')
 );
+
+$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_agb'] = array
+(
+    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_agb'],
+    'exclude' => true,
+    'search' => true,
+    'sorting' => true,
+    'flag' => 1,
+    'inputType' => 'checkbox',
+    'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '')
+);
+
 
 

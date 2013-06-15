@@ -7,5 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
+
+// fields
 $GLOBALS['TL_LANG']['tl_module']['vdb_image_folder'] = array('Speicherort für das Vereinsbild', '');
 $GLOBALS['TL_LANG']['tl_module']['vdb_file_upload'] = array('Bild uploaden', '');

@@ -69,5 +69,6 @@ $GLOBALS['TL_LANG']['tl_member']['vdb_bild'] = array('Bild', '');
 $GLOBALS['TL_LANG']['tl_member']['vdb_grund_der_loeschung'] = array('Grund der Löschung', '');
 $GLOBALS['TL_LANG']['tl_member']['vdb_passwort_2'] = array('Bestätigung Passwort', '');
 $GLOBALS['TL_LANG']['tl_member']['vdb_file_upload'] = array('Bildupload','');
+$GLOBALS['TL_LANG']['tl_member']['vdb_agb'] = array('Einverständniserklärung','');
 
 

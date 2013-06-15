@@ -319,13 +319,13 @@ class ModuleRegistrationVereinsdatenbank extends Module
      */
     private function generateEmailConfirmation($objWidget)
     {
-        $objWidgetEmailConf = clone $objWidget;
-        $objWidgetEmailConf->name = $objWidget->name . '_confirm';
-        $objWidgetEmailConf->value = $this->Input->post($objWidget->name . '_confirm');
-        $objWidgetEmailConf->id = $objWidget->id . '_confirm';
-        $objWidgetEmailConf->label = strlen($GLOBALS['TL_LANG']['tl_member']['email_confirm'][0]) ? $GLOBALS['TL_LANG']['tl_member']['email_confirm'][0] : $objWidget->name . '_confirm';
-        $objWidgetEmailConf->class = $objWidget->class . ' confirm';
-        return $objWidgetEmailConf;
+        $objWidgetClone = clone $objWidget;
+        $objWidgetClone->name = $objWidget->name . '_confirm';
+        $objWidgetClone->value = $this->Input->post($objWidget->name . '_confirm');
+        $objWidgetClone->id = $objWidget->id . '_confirm';
+        $objWidgetClone->label = strlen($GLOBALS['TL_LANG']['tl_member'][$objWidget->name . '_confirm'][0]) ? $GLOBALS['TL_LANG']['tl_member'][$objWidget->name . '_confirm'][0] : $objWidget->name . '_confirm';
+        $objWidgetClone->class = $objWidget->class . ' confirm';
+        return $objWidgetClone;
     }
 
     /**

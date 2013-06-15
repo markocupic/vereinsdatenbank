@@ -1,4 +1,4 @@
-#memberStage {
+#be_vereinsdatenbank {
     padding: 10px;
 }
 
@@ -39,4 +39,41 @@
 
 .green {
     color: green;
+}
+
+#stat_container td
+{
+    min-width:50px;
+    padding:5px;
+    text-align:center;
+    background-color: #f5f5f5;
+    border:2px solid #fff;
+
+}
+#stat_container td.empty
+{
+    background-color: transparent;
+}
+#stat_container thead .col_first
+{
+   color:#8ab858;
+}
+#stat_container tbody .col_first
+{
+    color:#0F57E2;
+}
+#stat_container .row_5 td
+{
+    border-bottom:20px solid #ffffff;
+}
+#stat_container .row_6 td
+{
+    border-top:20px solid #ffffff;
+}
+#stat_container td.col_first
+{
+   font-weight:bold;
+    text-align:left;
+    background-color: transparent;
+
 }

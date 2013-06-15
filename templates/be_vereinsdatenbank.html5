@@ -1,4 +1,4 @@
-<div id="memberStage" class="">
+<div id="be_vereinsdatenbank" class="">
 <h2><?php echo $this->headline; ?></h2>
 
 <?php if($this->systemMessages): ?>

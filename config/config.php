@@ -47,4 +47,9 @@ $GLOBALS['BE_MOD']['vereinsdatenbank']['member_staging'] = array
 	'icon' => 'system/modules/vereinsdatenbank/assets/images/award_star_gold.png',
 	'callback' => 'BackendVereinsdatenbank'
 );
+$GLOBALS['BE_MOD']['vereinsdatenbank']['stat'] = array
+(
+    'icon' => 'system/modules/vereinsdatenbank/assets/images/report.png',
+    'callback' => 'BackendVereinsdatenbankStat'
+);
 
