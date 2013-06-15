@@ -53,7 +53,7 @@ $GLOBALS['TL_LANG']['tl_member']['phone'] = array('Ansprechpartner Telefon', '')
 $GLOBALS['TL_LANG']['tl_member']['fax'] = array('Ansprechpartner Fax', '');
 $GLOBALS['TL_LANG']['tl_member']['website'] = array('Ansprechpartner Webseite', '');
 $GLOBALS['TL_LANG']['tl_member']['email'] = array('Ansprechpartner E-Mail', '');
-
+$GLOBALS['TL_LANG']['tl_member']['email_confirm'] = array('E-Mail Bestätigung', '');
 $GLOBALS['TL_LANG']['tl_member']['vdb_aktiv_engagierte_mitglieder'] = array('Aktiv engagierte Mitglieder', '');
 $GLOBALS['TL_LANG']['tl_member']['vdb_unterstuetzer'] = array('Unterstützer', '');
 $GLOBALS['TL_LANG']['tl_member']['vdb_wer_ist_engagiert'] = array('Wer ist engagiert', '');

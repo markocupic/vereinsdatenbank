@@ -33,6 +33,7 @@
  * Front end modules
  */
 $GLOBALS['FE_MOD']['vereinsdatenbank']['personalDataStaging'] = 'ModulePersonalDataStaging';
+$GLOBALS['FE_MOD']['vereinsdatenbank']['registrationVereinsdatenbank'] = 'ModuleRegistrationVereinsdatenbank';
 $GLOBALS['FE_MOD']['vereinsdatenbank']['closeAccountVereinsdatenbank'] = 'ModuleCloseAccountVereinsdatenbank';
 
 

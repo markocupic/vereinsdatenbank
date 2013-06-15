@@ -16,3 +16,6 @@ $GLOBALS['TL_LANG']['vereinsdatenbank']['be']['button']['discard_changes'] = 'Ä
 
 
 $GLOBALS['TL_LANG']['vereinsdatenbank']['fe']['matter'] = array('Grund', 'Bitte geben Sie einen Grund für die Löschung des Kontos an.');
+
+// error meessages
+$GLOBALS['TL_LANG']['ERR']['emailMatch'] = 'Die eingegebenen E-Mail Adressen stimmen nicht überein!';
