@@ -42,9 +42,11 @@ class BackendVereinsdatenbankStat extends BackendModule
     public function compile()
     {
         $this->Template->headline = $GLOBALS['TL_LANG']['vereinsdatenbank']['be']['headline_2'];
-
-        // active records | col1
-        $objDb = $this->Database->execute("SELECT id FROM tl_member WHERE vdb_belongs_to_vdb='1' AND activation='' AND disable=''");
+        $objDb = $this->Database->execute("SELECT pid FROM tbl_member_staging WHERE vdb_belongs_to_vdb='1'");
+        $arrStagedRecords = $objDb->fetchEach('pid');
+        $subQuery_1 = count($arrStagedRecords) ? "AND id NOT IN (" . implode(',', $arrStagedRecords) . ") " : "";
+        // active (reviewed) records | col1
+        $objDb = $this->Database->execute("SELECT id FROM tl_member WHERE vdb_belongs_to_vdb='1' " . $subQuery_1 . "AND disable=''");
         $this->Template->activeRecords = $objDb->numRows;
 
         // new records | col2
@@ -65,7 +67,7 @@ class BackendVereinsdatenbankStat extends BackendModule
 
         //  records with e-mail address | col1 - col5
         $recordsWithEmail = array();
-        $objDb = $this->Database->execute("SELECT id FROM tl_member WHERE vdb_belongs_to_vdb='1' AND activation='' AND disable='' AND email != ''");
+        $objDb = $this->Database->execute("SELECT id FROM tl_member WHERE vdb_belongs_to_vdb='1' " . $subQuery_1 . "AND disable='' AND email != ''");
         $recordsWithEmail[1] = $objDb->numRows;
         $objDb = $this->Database->execute("SELECT id FROM tl_member WHERE vdb_belongs_to_vdb='1' AND activation!='' AND disable='1' AND email != ''");
         $recordsWithEmail[2] = $objDb->numRows;
@@ -75,19 +77,18 @@ class BackendVereinsdatenbankStat extends BackendModule
         $recordsWithEmail[4] = $objDb->numRows;
         $objDb = $this->Database->execute("SELECT id FROM tl_member WHERE vdb_belongs_to_vdb='1' AND email != ''");
         $recordsWithEmail[5] = $objDb->numRows;
-        $this->Template->recordsWithEmail =  $recordsWithEmail;
+        $this->Template->recordsWithEmail = $recordsWithEmail;
 
         $arrRecords = array();
         $row = 6;
         $this->loadDataContainer('tl_member');
         $this->loadLanguageFile('tl_member');
 
-        foreach($GLOBALS['TL_DCA']['tl_member']['fields']['categories'] as $category)
-        {
+        foreach ($GLOBALS['TL_DCA']['tl_member']['fields']['categories'] as $category) {
             // col0
             $arrRecords[$row]['label'] = strlen($GLOBALS['TL_LANG']['tl_member']['vdb_vereinsname'][0]) ? $GLOBALS['TL_LANG']['tl_member'][$category][0] : $category;
             // col1
-            $objDb = $this->Database->execute("SELECT id FROM tl_member WHERE vdb_belongs_to_vdb='1' AND activation='' AND disable='' AND " . $category . "='1'");
+            $objDb = $this->Database->execute("SELECT id FROM tl_member WHERE vdb_belongs_to_vdb='1' " . $subQuery_1 . "AND disable='' AND " . $category . "='1'");
             $arrRecords[$row]['col_1'] = $objDb->numRows;
             // col2
             $objDb = $this->Database->execute("SELECT id FROM tl_member WHERE vdb_belongs_to_vdb='1' AND activation!='' AND disable='1' AND " . $category . "='1'");

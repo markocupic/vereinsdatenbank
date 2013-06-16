@@ -1,6 +1,9 @@
 #be_vereinsdatenbank {
     padding: 10px;
 }
+#be_vereinsdatenbank td, #be_vereinsdatenbank th{
+font-size:10px;
+}
 
 #comparingForm .col_0 label {
     display: none;

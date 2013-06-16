@@ -3,23 +3,18 @@
 /**
  * Contao Open Source CMS
  * Copyright (C) 2005-2013 Leo Feyer
- *
  * Formerly known as TYPOlight Open Source CMS.
- *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
  * Software Foundation website at <http://www.gnu.org/licenses/>.
- *
  * PHP version 5
  * @copyright  Leo Feyer 2005-2013
  * @author     Leo Feyer <https://contao.org>
@@ -31,7 +26,6 @@
 
 /**
  * Class ModuleCloseAccount
- *
  * Front end module "close account".
  * @copyright  Leo Feyer 2005-2013
  * @author     Leo Feyer <https://contao.org>
@@ -97,6 +91,7 @@ class ModuleCloseAccountVereinsdatenbank extends Module
             'label' => $GLOBALS['TL_LANG']['MSC']['password'][0],
             'eval' => array('hideInput' => true, 'mandatory' => true, 'required' => true, 'tableless' => $this->tableless)
         );
+        $temp = '';
         foreach ($arrFields as $arrField) {
             $strClass = $GLOBALS['TL_FFL'][$arrField['inputType']];
 
@@ -108,7 +103,6 @@ class ModuleCloseAccountVereinsdatenbank extends Module
             $objWidget->rowClass = 'row_0 row_first even';
 
             // Validate widget
-            $temp = '';
             if ($this->Input->post('FORM_SUBMIT') == 'tl_close_account') {
                 $objWidget->validate();
 
@@ -149,20 +143,20 @@ class ModuleCloseAccountVereinsdatenbank extends Module
                     // Delete children in tbl_member_staging
                     if ($this->Database->tableExists('tbl_member_staging')) {
                         $this->Database->prepare("DELETE FROM tbl_member_staging WHERE pid=?")
-                            ->execute($this->User->id);
+                        ->execute($this->User->id);
                     }
 
                     // Remove the account
                     if ($this->reg_close == 'close_delete') {
                         $this->Database->prepare("DELETE FROM tl_member WHERE id=?")
-                            ->execute($this->User->id);
+                        ->execute($this->User->id);
 
                         $this->log('User account ID ' . $this->User->id . ' (' . $this->User->email . ') has been deleted', 'ModuleCloseAccountVereinsdatenbank compile()', TL_ACCESS);
                     } // Deactivate the account
                     else {
                         $set = array('disable' => 1, 'vdb_grund_der_loeschung' => $grundDerLoeschung);
                         $this->Database->prepare("UPDATE tl_member %s WHERE id=?")->set($set)
-                            ->execute($this->User->id);
+                        ->execute($this->User->id);
 
                         $this->log('User account ID ' . $this->User->id . ' (' . $this->User->email . ') has been deactivated', 'ModuleCloseAccountVereinsdatenbank compile()', TL_ACCESS);
                     }
@@ -171,6 +165,7 @@ class ModuleCloseAccountVereinsdatenbank extends Module
                     $this->jumpToOrReload($this->jumpTo);
                 }
             }
+
             $temp .= $objWidget->parse();
         }
 
