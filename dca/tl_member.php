@@ -30,12 +30,6 @@
 
 
 /**
- * Palettes
- */
-$GLOBALS['TL_DCA']['tl_member']['palettes']['default'] = str_replace('{groups_legend}', '{organisation_legend},organization_name,organization_description,bereich_sport,bereich_gesundheit,bereich_politik;{groups_legend}', $GLOBALS['TL_DCA']['tl_member']['palettes']['default']);
-
-
-/**
  * Fields
  */
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_belongs_to_vdb'] = array
@@ -45,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_belongs_to_vdb'] = array
     'search' => true,
     'sorting' => true,
     'flag' => 1,
-    'inputType' => 'checkbox',
+    'inputType' => 'text',
     'eval' => array('mandatory' => false, 'feEditable' => false, 'feViewable' => false, 'tl_class' => '')
 );
 
@@ -75,13 +69,15 @@ foreach ($GLOBALS['TL_DCA']['tl_member']['fields']['categories'] as $categoryNam
     (
         'label' => &$GLOBALS['TL_LANG']['tl_member'][$categoryName],
         'inputType' => 'checkbox',
-        'eval' => array('feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile')
+        'eval' => array('includeBlankOption' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile')
     );
 }
 
 
 
 // Weitere Felder
+
+
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_vereinsname'] = array
 (
     'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_vereinsname'],
@@ -260,4 +256,50 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_agb'] = array
 );
 
 
+if ($_GET['do'] != 'vdb_member_administration') {
+    return;
+}
+/**
+ * dca config
+ */
+$GLOBALS['TL_DCA']['tl_member']['list']['sorting']['filter'][] = array
+(
+    'vdb_belongs_to_vdb=?', '1'
+);
+
+/**
+ * Create the custom palette
+ */
+$fields['address'] = array('firstname,lastname,street,postal,city,email,phone,fax,username,password');
+foreach ($GLOBALS['TL_DCA']['tl_member']['fields'] as $k => $v) {
+    if (preg_match('/^vdb/', $k)) {
+        $fields['profile'][] = $k;
+    }
+}
+$GLOBALS['TL_DCA']['tl_member']['palettes']['default'] = '{address_legend},' . implode(',', $fields['address']) . ';{vereinsdatenbank_legend},' . implode(',', $fields['profile']);
+//die($GLOBALS['TL_DCA']['tl_member']['palettes']['default']);
+
+
+
+/**
+ * Class tl_member_vereinsdatenbank
+ *
+ * Provide miscellaneous methods that are used by the data configuration array.
+ * @copyright  Leo Feyer 2005-2013
+ * @author     Leo Feyer <https://contao.org>
+ * @package    Controller
+ */
+class tl_member_vereinsdatenbank extends tl_member
+{
+
+    /**
+     * Import the back end user object
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+
+}
 
