@@ -54,7 +54,7 @@ $GLOBALS['BE_MOD']['vereinsdatenbank']['stat'] = array
 );
 $GLOBALS['BE_MOD']['vereinsdatenbank']['vdb_member_administration'] = array
 (
-    'icon' => 'system/modules/vereinsdatenbank/assets/images/report.png',
+    'icon' => 'system/modules/vereinsdatenbank/assets/images/group.png',
     'tables' => array('tl_member')
 );
 

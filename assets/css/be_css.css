@@ -1,3 +1,10 @@
+#modified_records td
+{
+padding:5px;
+}
+
+
+
 #be_vereinsdatenbank {
     padding: 10px;
 }
@@ -7,6 +14,11 @@ font-size:10px;
 
 #comparingForm .col_0 label {
     display: none;
+}
+#comparingForm td.green div{
+    background-position:right top;
+    background-image:url(../images/new_icon.gif);
+    background-repeat:no-repeat;
 }
 
 #comparingForm .row_0 td {
