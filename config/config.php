@@ -32,7 +32,7 @@
 /**
  * Front end modules
  */
-$GLOBALS['FE_MOD']['vereinsdatenbank']['personalDataStaging'] = 'ModulePersonalDataStaging';
+$GLOBALS['FE_MOD']['vereinsdatenbank']['personalDataVereinsdatenbank'] = 'ModulePersonalDataVereinsdatenbank';
 $GLOBALS['FE_MOD']['vereinsdatenbank']['registrationVereinsdatenbank'] = 'ModuleRegistrationVereinsdatenbank';
 $GLOBALS['FE_MOD']['vereinsdatenbank']['closeAccountVereinsdatenbank'] = 'ModuleCloseAccountVereinsdatenbank';
 
@@ -57,4 +57,10 @@ $GLOBALS['BE_MOD']['vereinsdatenbank']['vdb_member_administration'] = array
     'icon' => 'system/modules/vereinsdatenbank/assets/images/group.png',
     'tables' => array('tl_member')
 );
+
+/**
+ * Hooks
+ */
+$GLOBALS['TL_HOOKS']['generatePage'][] = array('VereinsdatenbankEmailNotification', 'notifyEditor');
+
 

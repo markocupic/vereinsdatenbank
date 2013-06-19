@@ -31,7 +31,7 @@
  * @author     Leo Feyer <https://contao.org>
  * @package    Controller
  */
-class ModulePersonalDataStaging extends Module
+class ModulePersonalDataVereinsdatenbank extends Module
 {
 
     /**
@@ -365,6 +365,7 @@ class ModulePersonalDataStaging extends Module
                     $set['tstamp'] = time();
                     $set['editableFields'] = serialize($arrEditable);
                     $set['pid'] = $this->User->id;
+                    $set['moduleId'] = $this->id;
                     $set[$field] = $varSave;
                     unset($set['id']);
                     $this->Database->prepare("INSERT INTO tbl_member_staging %s")->set($set)->executeUncached();
@@ -374,6 +375,7 @@ class ModulePersonalDataStaging extends Module
                 $set = array(
                     'tstamp' => time(),
                     'editableFields' => serialize($arrEditable),
+                    'moduleId' => $this->id,
                     $field => $varSave
                 );
                 $this->Database->prepare("UPDATE tbl_member_staging %s WHERE pid=?")->set($set)->executeUncached($this->User->id);
@@ -444,8 +446,8 @@ class ModulePersonalDataStaging extends Module
             $this->Database->query("TRUNCATE TABLE tbl_member_staging");
             $this->Database->query("ALTER TABLE tbl_member_staging ADD PRIMARY KEY (id)");
             $this->Database->query("ALTER TABLE tbl_member_staging ADD pid INT(12) NOT NULL AFTER id");
-            $this->Database->query("ALTER TABLE tbl_member_staging ADD editableFields text NULL AFTER pid");
-            $this->Database->query("ALTER TABLE tbl_member_staging ADD adminIsAdvised char(1) NOT NULL default '' AFTER editableFields");
+            $this->Database->query("ALTER TABLE tbl_member_staging ADD moduleId INT(12) NOT NULL AFTER pid");
+            $this->Database->query("ALTER TABLE tbl_member_staging ADD editableFields text NULL AFTER moduleId");
         }
     }
 

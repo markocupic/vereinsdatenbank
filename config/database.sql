@@ -47,6 +47,15 @@ CREATE TABLE `tl_member` (
 --
 CREATE TABLE `tl_module` (
   `vdb_image_folder` varchar(255) NOT NULL default '',
+  `vdb_editor_email_notification_addresses` varchar(255) NOT NULL default '',
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+
+
+--
+-- Table `tl_log`
+--
+CREATE TABLE `tl_log` (
+  `vdb_email_editor_notification_tstamp` int(10) unsigned NOT NULL default '0',
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
