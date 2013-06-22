@@ -239,7 +239,7 @@ class ModulePersonalDataVereinsdatenbank extends Module
             ++$row;
         }
 
-        /********Add File Uploader to Template*******/
+        /********Append File Uploader to Template*******/
         if (strlen($this->vdb_image_folder)) {
             $hasUpload = true;
             $field = 'vdb_file_upload';

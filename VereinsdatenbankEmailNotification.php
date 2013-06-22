@@ -56,16 +56,17 @@ class VereinsdatenbankEmailNotification extends System
                 // inform editors only once per day
                 if ($objTlLog->numRows < 1 || ($objTlLog->vdb_email_editor_notification_tstamp + $oneDay) <= $today_at_midnight) {
                     $objTblMemberStaging->reset();
-                    $strBody = 'Hello! There are some new records in tl_member' . chr(10) . chr(13);
+                    $nl = chr(10) . chr(13);
+                    $strBody = 'Hello!' . $nl . 'There are some new records in tl_member' . $nl;
                     $arrTo = array();
                     while ($objTblMemberStaging->next()) {
                         $objModule = $this->Database->prepare("SELECT vdb_editor_email_notification_addresses AS recipients FROM tl_module WHERE id=?")
-                        ->executeUncached($objTblMemberStaging->moduleId);
+                            ->executeUncached($objTblMemberStaging->moduleId);
                         $arrTo = array_merge(explode(',', trim($objModule->recipients)), $arrTo);
-                        $strBody .= 'Please check the profile of ' . $objTblMemberStaging->vdb_vereinsname . ' with the ID ' . $objTblMemberStaging->pid . chr(10) . chr(13);
+                        $strBody .= 'Please check the profile of ' . $objTblMemberStaging->vdb_vereinsname . ' with the ID ' . $objTblMemberStaging->pid . $nl;
                     }
                     $arrTo = array_unique(array_values($arrTo));
-                    $strBody .= 'This message has been generated automaticaly from the system at ' . $_SERVER['SERVER_NAME'] . chr(10) . chr(13);
+                    $strBody .= 'This message was generated automatically by the system at ' . $_SERVER['SERVER_NAME'] . $nl;
 
                     // Notify editors
                     if (count($arrTo)) {
@@ -74,7 +75,7 @@ class VereinsdatenbankEmailNotification extends System
                         $email->replyTo($GLOBALS['TL_CONFIG']['adminEmail']);
                         $email->subject = 'Modification Report Vereinsdatenbank at ' . $_SERVER['SERVER_NAME'];
                         $email->text = $strBody;
-                        $email->html = $strBody;
+                        //$email->html = $strBody;
                         $email->sendTo(implode(',', $arrTo));
                         // Write to tl_log
                         $this->log('Vereinsdatenbank: The Editors (' . implode(',', $arrTo) . ') were notified about new entries in tbl_member_staging.', 'VereinsdatenbankEmailNotification notifyEditor()', TL_GENERAL);
