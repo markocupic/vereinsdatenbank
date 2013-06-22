@@ -23,6 +23,9 @@ CREATE TABLE `tl_member` (
   `vdb_bereich_integration_migration` char(1) NOT NULL default '',
 
   `vdb_vereinsname` varchar(255) NOT NULL default '',
+  `vdb_lat_coord` varchar(255) NOT NULL default '',
+  `vdb_lng_coord` varchar(255) NOT NULL default '',
+
   `vdb_aktiv_engagierte_mitglieder` varchar(255) NOT NULL default '',
   `vdb_unterstuetzer` varchar(255) NOT NULL default '',
   `vdb_wer_ist_engagiert` varchar(255) NOT NULL default '',

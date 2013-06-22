@@ -3,23 +3,18 @@
 /**
  * Contao Open Source CMS
  * Copyright (C) 2005-2012 Leo Feyer
- *
  * Formerly known as TYPOlight Open Source CMS.
- *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
  * Software Foundation website at <http://www.gnu.org/licenses/>.
- *
  * PHP version 5
  * @copyright  Marko Cupic 2013
  * @author     Marko Cupic <m.cupic@gmx.ch>
@@ -99,6 +94,32 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['country'] = array
     'inputType' => 'select',
     'options' => array('de', 'fr', 'ch'),
     'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'address', 'tl_class' => '')
+);
+
+$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_lat_coord'] = array
+(
+    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_lat_coord'],
+    'inputType' => 'text',
+    'search' => false,
+    'eval' => array(
+        'mandatory' => false, 'feEditable' => true,
+        'feViewable' => true, 'feGroup' => 'contact',
+        'tl_class' => 'w50', 'maxlength' => 32,
+        'readonly' => false, 'disabled' => false
+    )
+);
+
+$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_lng_coord'] = array
+(
+    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_lng_coord'],
+    'inputType' => 'text',
+    'search' => false,
+    'eval' => array(
+        'mandatory' => false, 'feEditable' => true,
+        'feViewable' => true, 'feGroup' => 'contact',
+        'tl_class' => 'w50', 'maxlength' => 32,
+        'readonly' => false, 'disabled' => false
+    )
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_aktiv_engagierte_mitglieder'] = array
@@ -256,6 +277,8 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_agb'] = array
 );
 
 
+
+
 if ($_GET['do'] != 'vdb_member_administration') {
     return;
 }
@@ -283,7 +306,6 @@ $GLOBALS['TL_DCA']['tl_member']['palettes']['default'] = '{address_legend},' . i
 
 /**
  * Class tl_member_vereinsdatenbank
- *
  * Provide miscellaneous methods that are used by the data configuration array.
  * @copyright  Leo Feyer 2005-2013
  * @author     Leo Feyer <https://contao.org>
