@@ -38,7 +38,7 @@ class ModulePersonalDataVereinsdatenbank extends Module
      * Template
      * @var string
      */
-    protected $strTemplate = 'member_default';
+    protected $strTemplate = 'vdb_member_default';
 
 
     /**
@@ -102,8 +102,8 @@ class ModulePersonalDataVereinsdatenbank extends Module
         }
 
         // Set template
-        if (strlen($this->memberTpl)) {
-            $this->Template = new FrontendTemplate($this->memberTpl);
+        if (strlen($this->vdb_memberTpl)) {
+            $this->Template = new FrontendTemplate($this->vdb_memberTpl);
             $this->Template->setData($this->arrData);
         }
 
@@ -114,14 +114,6 @@ class ModulePersonalDataVereinsdatenbank extends Module
         $doNotSubmit = false;
         $hasUpload = false;
         $row = 0;
-
-        /***************/
-        //synchronize tables
-        if (!$this->Input->post('FORM_SUBMIT')) {
-            // $this->synchronize();
-        }
-        /***************/
-
 
         // Build form
         foreach ($this->editable as $field) {
@@ -147,7 +139,7 @@ class ModulePersonalDataVereinsdatenbank extends Module
 
             /***************/
             // get tablename tl_member || tbl_member_staging
-            $strTable = $this->getStrTable($field, $objWidget);
+            $strTable = $this->getStrTable($field);
             $varValue = $strTable == 'tl_member' ? $this->User->$field : $this->getStagingValue($this->User->id, $field);
             $objWidget = new $strClass($this->prepareForWidget($arrData, $field, $varValue, '', $strTable));
             //$objWidget = new $strClass($this->prepareForWidget($arrData, $field, $this->User->$field, '', $strTable));
@@ -231,7 +223,6 @@ class ModulePersonalDataVereinsdatenbank extends Module
                 }
             }
 
-
             $temp = $objWidget->parse();
 
             $this->Template->fields .= $temp;
@@ -255,7 +246,7 @@ class ModulePersonalDataVereinsdatenbank extends Module
             } else {
                 if ($_FILES[$field]['name']) {
                     $ext = pathinfo($_FILES[$field]['name'], PATHINFO_EXTENSION);
-                    $filename = time() . '.' . $ext;
+                    $filename = time() . '.' . strtolower($ext);
                     $_FILES[$field]['name'] = $filename;
                     $fileSRC = $this->vdb_image_folder . '/' . $filename;
                 }
@@ -267,7 +258,14 @@ class ModulePersonalDataVereinsdatenbank extends Module
             }
             // add uploadfield to template
             $strGroup = $arrData['eval']['feGroup'];
+            $strTable = $this->getStrTable('vdb_bild');
+            $imgSRC = $strTable == 'tl_member' ? $this->User->vdb_bild : $this->getStagingValue($this->User->id, 'vdb_bild');
+            if ($imgSRC != '' && is_file(TL_ROOT . '/' . $imgSRC)) {
+                $imgHtml = sprintf('<a href="%s" data-lightbox="image">%s</a><br>', $imgSRC, $imgSRC) . '<br>';
+            }
             $temp = $objWidget->parse();
+
+            $temp = str_replace('<input', $imgHtml . '<input', $temp);
             $this->Template->fields .= $temp;
             $arrFields[$strGroup][$field] .= $temp;
         }
@@ -306,6 +304,10 @@ class ModulePersonalDataVereinsdatenbank extends Module
         $this->Template->addressDetails = $GLOBALS['TL_LANG']['tl_member']['addressDetails'];
         $this->Template->contactDetails = $GLOBALS['TL_LANG']['tl_member']['contactDetails'];
         $this->Template->personalData = $GLOBALS['TL_LANG']['tl_member']['personalData'];
+        /********add legends ********/
+        $this->Template->activitySectorDetails = $GLOBALS['TL_LANG']['tl_member']['activitySector'];
+        $this->Template->associationProfileDetails = $GLOBALS['TL_LANG']['tl_member']['associatonProfile'];
+        $this->Template->imageUploadDetails = $GLOBALS['TL_LANG']['tl_member']['imageUpload'];
 
         // Add groups
         foreach ($arrFields as $k => $v) {
@@ -383,40 +385,16 @@ class ModulePersonalDataVereinsdatenbank extends Module
         }
     }
 
-    /**
-     * synchronize tbl_member_staging -> tl_member
-     */
-    private function synchronize()
-    {
-        $objDbStage = $this->Database->prepare("SELECT id FROM tbl_member_staging WHERE pid=?")->executeUncached($this->User->id);
-        if ($objDbStage->numRows < 1) {
-            return;
-        } else {
-
-            foreach ($this->editable as $field) {
-                $objDbStage = $this->Database->prepare("SELECT " . $field . " AS value FROM tbl_member_staging WHERE pid=?")->executeUncached($this->User->id);
-                $set = array($field => $objDbStage->value);
-                $this->Database->prepare('UPDATE tl_member %s WHERE id=?')->set($set)->executeUncached($this->User->id);
-            }
-            $this->Database->prepare('DELETE FROM tbl_member_staging WHERE pid=?')->executeUncached($this->User->id);
-            $this->reload();
-        }
-    }
 
     /**
      * @param $field
      * @param $objWidget
      * @return string
      */
-    private function getStrTable($field, $objWidget)
+    private function getStrTable($field)
     {
-        // set str table only to tbl_member_staging, if there is a form submit
-        if ($this->Input->post('FORM_SUBMIT') != 'tl_member_' . $this->id) {
-            //return 'tl_member';
-        }
-
         // password and username changes can be made directly
-        if ($objWidget instanceof FormPassword || $field == 'username') {
+        if ($field == 'password' || $field == 'username') {
             return 'tl_member';
         } else {
             $objMember = $this->Database->prepare("SELECT " . $field . " AS fieldcontent FROM tbl_member_staging WHERE pid=?")

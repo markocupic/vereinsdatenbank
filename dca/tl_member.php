@@ -34,7 +34,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_belongs_to_vdb'] = array
     'search' => true,
     'sorting' => true,
     'flag' => 1,
-    'inputType' => 'text',
+    'inputType' => 'checkbox',
     'eval' => array('mandatory' => false, 'feEditable' => false, 'feViewable' => false, 'tl_class' => '')
 );
 
@@ -64,7 +64,7 @@ foreach ($GLOBALS['TL_DCA']['tl_member']['fields']['categories'] as $categoryNam
     (
         'label' => &$GLOBALS['TL_LANG']['tl_member'][$categoryName],
         'inputType' => 'checkbox',
-        'eval' => array('includeBlankOption' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile')
+        'eval' => array('includeBlankOption' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'activitySector')
     );
 }
 
@@ -81,7 +81,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_vereinsname'] = array
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'text',
-    'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'personal', 'tl_class' => '')
+    'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'personal', 'tl_class' => 'w50 m12')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['country'] = array
@@ -93,7 +93,18 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['country'] = array
     'flag' => 1,
     'inputType' => 'select',
     'options' => array('de', 'fr', 'ch'),
-    'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'address', 'tl_class' => '')
+    'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'address', 'tl_class' => 'w50 m12')
+);
+
+$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_gruendungsdatum'] = array
+(
+    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_gruendungsdatum'],
+    'exclude' => true,
+    'search' => true,
+    'sorting' => true,
+    'flag' => 1,
+    'inputType' => 'text',
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'w50 m12', 'rgxp' => 'date')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_lat_coord'] = array
@@ -104,7 +115,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_lat_coord'] = array
     'eval' => array(
         'mandatory' => false, 'feEditable' => true,
         'feViewable' => true, 'feGroup' => 'contact',
-        'tl_class' => 'w50', 'maxlength' => 32,
+        'tl_class' => 'w50 m12', 'maxlength' => 32,
         'readonly' => false, 'disabled' => false
     )
 );
@@ -117,7 +128,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_lng_coord'] = array
     'eval' => array(
         'mandatory' => false, 'feEditable' => true,
         'feViewable' => true, 'feGroup' => 'contact',
-        'tl_class' => 'w50', 'maxlength' => 32,
+        'tl_class' => 'w50 m12', 'maxlength' => 32,
         'readonly' => false, 'disabled' => false
     )
 );
@@ -130,7 +141,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_aktiv_engagierte_mitglieder'] = a
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'text',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '', 'rgxp' => 'digit')
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'w50 m12', 'rgxp' => 'digit')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_unterstuetzer'] = array
@@ -141,7 +152,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_unterstuetzer'] = array
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'text',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '', 'rgxp' => 'digit')
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'w50 m12', 'rgxp' => 'digit')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_wer_ist_engagiert'] = array
@@ -152,7 +163,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_wer_ist_engagiert'] = array
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'text',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '')
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'w50 m12')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_taetigkeitsmerkmale'] = array
@@ -163,7 +174,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_taetigkeitsmerkmale'] = array
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'textarea',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '')
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_taetigkeitsmerkmale_zweitsprache'] = array
@@ -174,7 +185,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_taetigkeitsmerkmale_zweitsprache'
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'textarea',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '')
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_egagiert_fuer'] = array
@@ -185,7 +196,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_egagiert_fuer'] = array
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'textarea',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '')
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_egagiert_fuer_zweitsprache'] = array
@@ -196,18 +207,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_egagiert_fuer_zweitsprache'] = ar
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'textarea',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '')
-);
-
-$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_gruendungsdatum'] = array
-(
-    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_gruendungsdatum'],
-    'exclude' => true,
-    'search' => true,
-    'sorting' => true,
-    'flag' => 1,
-    'inputType' => 'text',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '', 'rgxp' => 'date')
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_besondere_aktion'] = array
@@ -218,7 +218,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_besondere_aktion'] = array
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'textarea',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '')
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_besondere_aktion_zweitsprache'] = array
@@ -229,7 +229,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_besondere_aktion_zweitsprache'] =
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'textarea',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '')
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_nachrichten_erlauben'] = array
@@ -240,18 +240,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_nachrichten_erlauben'] = array
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'checkbox',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '')
-);
-
-$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_bild'] = array
-(
-    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_bild'],
-    'exclude' => true,
-    'search' => true,
-    'sorting' => true,
-    'flag' => 1,
-    'inputType' => 'text',
-    'eval' => array('mandatory' => false, 'feEditable' => false, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '')
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_grund_der_loeschung'] = array
@@ -262,7 +251,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_grund_der_loeschung'] = array
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'textarea',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '')
+    'eval' => array('mandatory' => false, 'feEditable' => false, 'feViewable' => false, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_agb'] = array
@@ -273,9 +262,19 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_agb'] = array
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'checkbox',
-    'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'profile', 'tl_class' => '')
+    'eval' => array('mandatory' => true, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr')
 );
 
+$GLOBALS['TL_DCA']['tl_member']['fields']['vdb_bild'] = array
+(
+    'label' => &$GLOBALS['TL_LANG']['tl_member']['vdb_bild'],
+    'exclude' => true,
+    'search' => true,
+    'sorting' => true,
+    'flag' => 1,
+    'inputType' => 'text',
+    'eval' => array('mandatory' => false, 'feEditable' => false, 'feViewable' => true, 'feGroup' => 'imageUpload', 'tl_class' => 'clr')
+);
 
 
 
@@ -293,35 +292,21 @@ $GLOBALS['TL_DCA']['tl_member']['list']['sorting']['filter'][] = array
 /**
  * Create the custom palette
  */
-$fields['address'] = array('firstname,lastname,street,postal,city,email,phone,fax,username,password');
+$fields = array();
+$fields['address'] = array('vdb_belongs_to_vdb', 'firstname', 'lastname', 'street', 'postal', 'city', 'email', 'phone', 'fax', ';{login_legend}','username', 'password');
+
 foreach ($GLOBALS['TL_DCA']['tl_member']['fields'] as $k => $v) {
-    if (preg_match('/^vdb/', $k)) {
+    if (preg_match('/^vdb_bereich/', $k) && !in_array($k, $fields['address'])) {
+        $fields['activitySectors'][] = $k;
+    }
+}
+
+foreach ($GLOBALS['TL_DCA']['tl_member']['fields'] as $k => $v) {
+    if (preg_match('/^vdb/', $k) && !in_array($k, $fields['address']) && !in_array($k, $fields['activitySectors'])) {
         $fields['profile'][] = $k;
     }
 }
-$GLOBALS['TL_DCA']['tl_member']['palettes']['default'] = '{address_legend},' . implode(',', $fields['address']) . ';{vereinsdatenbank_legend},' . implode(',', $fields['profile']);
-//die($GLOBALS['TL_DCA']['tl_member']['palettes']['default']);
+$GLOBALS['TL_DCA']['tl_member']['palettes']['default'] = '{vdb_address_legend},' . implode(',', $fields['address']) . ';{vdb_activity_sectors_legend:hide},' . implode(',', $fields['activitySectors']) . ';{vdb_properties_legend:hide},' . implode(',', $fields['profile']);
 
 
-
-/**
- * Class tl_member_vereinsdatenbank
- * Provide miscellaneous methods that are used by the data configuration array.
- * @copyright  Leo Feyer 2005-2013
- * @author     Leo Feyer <https://contao.org>
- * @package    Controller
- */
-class tl_member_vereinsdatenbank extends tl_member
-{
-
-    /**
-     * Import the back end user object
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-
-}
 

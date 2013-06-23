@@ -38,7 +38,7 @@ class ModuleRegistrationVereinsdatenbank extends Module
      * Template
      * @var string
      */
-    protected $strTemplate = 'member_default';
+    protected $strTemplate = 'vdb_member_default';
 
 
     /**
@@ -79,8 +79,12 @@ class ModuleRegistrationVereinsdatenbank extends Module
 
         $GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
-        $this->loadLanguageFile('tl_member');
         $this->loadDataContainer('tl_member');
+        $this->loadLanguageFile('tl_member');
+        $this->loadDataContainer('tl_module');
+        $this->loadLanguageFile('tl_module');
+
+
 
         // Call onload_callback (e.g. to check permissions)
         if (is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'])) {
@@ -98,8 +102,8 @@ class ModuleRegistrationVereinsdatenbank extends Module
             return;
         }
 
-        if (strlen($this->memberTpl)) {
-            $this->Template = new FrontendTemplate($this->memberTpl);
+        if (strlen($this->vdb_memberTpl)) {
+            $this->Template = new FrontendTemplate($this->vdb_memberTpl);
             $this->Template->setData($this->arrData);
         }
 
@@ -195,8 +199,8 @@ class ModuleRegistrationVereinsdatenbank extends Module
                 // Make sure that unique fields are unique (check the eval setting first -> #3063)
                 if ($arrData['eval']['unique'] && $varValue != '') {
                     $objUnique = $this->Database->prepare("SELECT * FROM tl_member WHERE " . $field . "=?")
-                    ->limit(1)
-                    ->execute($varValue);
+                        ->limit(1)
+                        ->execute($varValue);
 
                     if ($objUnique->numRows) {
                         $objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], (strlen($arrData['label'][0]) ? $arrData['label'][0] : $field)));
@@ -260,6 +264,44 @@ class ModuleRegistrationVereinsdatenbank extends Module
             ++$i;
         }
 
+        /******* new member belongs to vdb ************/
+        $arrUser['vdb_belongs_to_vdb'] = 1;
+        /*******************/
+
+        /********Append File Uploader to Template*******/
+        if (strlen($this->vdb_image_folder)) {
+            $hasUpload = true;
+            $field = 'vdb_file_upload';
+
+            // set the uplaod-folder for the image
+            $arrData = $GLOBALS['TL_DCA']['tl_module']['fields'][$field];
+            $arrData['eval']['uploadFolder'] = $this->vdb_image_folder;
+            $strClass = $GLOBALS['TL_FFL'][$arrData['inputType']];
+            $objWidget = new $strClass($this->prepareForWidget($arrData, $field));
+            unset($fileSRC);
+            if (!is_dir(TL_ROOT . '/' . $this->vdb_image_folder)) {
+                $objWidget->addError('Upload-folder not defined!');
+            } else {
+                if ($_FILES[$field]['name']) {
+                    $ext = pathinfo($_FILES[$field]['name'], PATHINFO_EXTENSION);
+                    $filename = time() . '.' . strtolower($ext);
+                    $_FILES[$field]['name'] = $filename;
+                    $fileSRC = $this->vdb_image_folder . '/' . $filename;
+                }
+            }
+            $objWidget->validate();
+            if ($fileSRC && !$objWidget->hasErrors()) {
+                // If all ok, write to db
+                $arrUser['vdb_bild'] = $fileSRC;
+            }
+            // add uploadfield to template
+            $strGroup = $arrData['eval']['feGroup'];
+            $temp = $objWidget->parse();
+            $this->Template->fields .= $temp;
+            $arrFields[$strGroup][$field] .= $temp;
+        }
+        /***************/
+
         // Captcha
         if (!$this->disableCaptcha) {
             $objCaptcha->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
@@ -283,6 +325,12 @@ class ModuleRegistrationVereinsdatenbank extends Module
         $this->Template->contactDetails = $GLOBALS['TL_LANG']['tl_member']['contactDetails'];
         $this->Template->personalData = $GLOBALS['TL_LANG']['tl_member']['personalData'];
         $this->Template->captchaDetails = $GLOBALS['TL_LANG']['MSC']['securityQuestion'];
+        /********add legends ********/
+        $this->Template->activitySectorDetails = $GLOBALS['TL_LANG']['tl_member']['activitySector'];
+        $this->Template->associationProfileDetails = $GLOBALS['TL_LANG']['tl_member']['associatonProfile'];
+        $this->Template->imageUploadDetails = $GLOBALS['TL_LANG']['tl_member']['imageUpload'];
+
+
 
         // Add groups
         foreach ($arrFields as $k => $v) {
@@ -411,10 +459,6 @@ class ModuleRegistrationVereinsdatenbank extends Module
             $arrData['newsletter'] = array($arrData['newsletter']);
         }
 
-        /*******************/
-        $arrData['vdb_belongs_to_vdb'] = 1;
-        /*******************/
-
         // Create user
         $objNewUser = $this->Database->prepare("INSERT INTO tl_member %s")->set($arrData)->execute();
         $insertId = $objNewUser->insertId;
@@ -432,7 +476,7 @@ class ModuleRegistrationVereinsdatenbank extends Module
             new Folder($this->reg_homeDir . '/' . $strUserDir);
 
             $this->Database->prepare("UPDATE tl_member SET homeDir=?, assignDir=1 WHERE id=?")
-            ->execute($this->reg_homeDir . '/' . $strUserDir, $insertId);
+                ->execute($this->reg_homeDir . '/' . $strUserDir, $insertId);
         }
 
         // HOOK: send insert ID and user data
@@ -462,8 +506,8 @@ class ModuleRegistrationVereinsdatenbank extends Module
 
         // Check the token
         $objMember = $this->Database->prepare("SELECT * FROM tl_member WHERE activation=?")
-        ->limit(1)
-        ->execute($this->Input->get('token'));
+            ->limit(1)
+            ->execute($this->Input->get('token'));
 
         if ($objMember->numRows < 1) {
             $this->Template->type = 'error';
@@ -474,7 +518,7 @@ class ModuleRegistrationVereinsdatenbank extends Module
 
         // Update account
         $this->Database->prepare("UPDATE tl_member SET disable='', activation='' WHERE id=?")
-        ->execute($objMember->id);
+            ->execute($objMember->id);
 
         // HOOK: post activation callback
         if (isset($GLOBALS['TL_HOOKS']['activateAccount']) && is_array($GLOBALS['TL_HOOKS']['activateAccount'])) {
@@ -502,8 +546,8 @@ class ModuleRegistrationVereinsdatenbank extends Module
         // Redirect to jumpTo page
         if (strlen($this->reg_jumpTo)) {
             $objNextPage = $this->Database->prepare("SELECT id, alias FROM tl_page WHERE id=?")
-            ->limit(1)
-            ->execute($this->reg_jumpTo);
+                ->limit(1)
+                ->execute($this->reg_jumpTo);
 
             if ($objNextPage->numRows) {
                 $this->redirect($this->generateFrontendUrl($objNextPage->fetchAssoc()));
@@ -547,7 +591,14 @@ class ModuleRegistrationVereinsdatenbank extends Module
         }
 
         $objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
-        $objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
+        /********* notify multiple admins ************/
+        $arrTo = array($GLOBALS['TL_ADMIN_EMAIL']);
+        if (strlen($this->vdb_editor_email_notification_addresses)) {
+            $arrTo = array_merge($arrTo, explode(',', $this->vdb_editor_email_notification_addresses));
+        }
+        $objEmail->sendTo(implode(',', $arrTo));
+        /*********************/
+        //$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
 
         $this->log('A new user (ID ' . $intId . ') has registered on the website', 'ModuleRegistration sendAdminNotification()', TL_ACCESS);
     }

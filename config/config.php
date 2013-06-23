@@ -42,17 +42,17 @@ $GLOBALS['FE_MOD']['vereinsdatenbank']['closeAccountVereinsdatenbank'] = 'Module
  * Backend modules
  */
 
-$GLOBALS['BE_MOD']['vereinsdatenbank']['member_staging'] = array
+$GLOBALS['BE_MOD']['vdb_vereinsdatenbank']['vdb_member_staging'] = array
 (
     'icon' => 'system/modules/vereinsdatenbank/assets/images/award_star_gold.png',
-    'callback' => 'BackendVereinsdatenbank'
+    'callback' => 'BackendVereinsdatenbankMemberStaging'
 );
-$GLOBALS['BE_MOD']['vereinsdatenbank']['stat'] = array
+$GLOBALS['BE_MOD']['vdb_vereinsdatenbank']['vdb_stat'] = array
 (
     'icon' => 'system/modules/vereinsdatenbank/assets/images/report.png',
     'callback' => 'BackendVereinsdatenbankStat'
 );
-$GLOBALS['BE_MOD']['vereinsdatenbank']['vdb_member_administration'] = array
+$GLOBALS['BE_MOD']['vdb_vereinsdatenbank']['vdb_member_administration'] = array
 (
     'icon' => 'system/modules/vereinsdatenbank/assets/images/group.png',
     'tables' => array('tl_member')

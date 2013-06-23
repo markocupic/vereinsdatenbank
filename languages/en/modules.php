@@ -33,7 +33,14 @@
  * Front end modules
  */
 
-$GLOBALS['TL_LANG']['FMD']['personalDataVereinsdatenbank']   = array('Persönliche Daten mit Staging-Funktion', 'Erzeugt ein Formular zur Bearbeitung der Benutzerdaten.');
-$GLOBALS['TL_LANG']['FMD']['closeAccountVereinsdatenbank']   = array('Vereinsdatenbank Konto schließen', 'Erzeugt ein Formular zur Löschung eines Benutzerkontos.');
+$GLOBALS['TL_LANG']['FMD']['personalDataVereinsdatenbank'] = array('Persönliche Daten mit Staging-Funktion', 'Erzeugt ein Formular zur Bearbeitung der Benutzerdaten.');
+$GLOBALS['TL_LANG']['FMD']['closeAccountVereinsdatenbank'] = array('Vereinsdatenbank Konto schließen', 'Erzeugt ein Formular zur Löschung eines Benutzerkontos.');
 
+/**
+ * Back end modules
+ */
+$GLOBALS['TL_LANG']['MOD']['vdb_vereinsdatenbank'] = 'Vereinsdatenbank (VDB)';
+$GLOBALS['TL_LANG']['MOD']['vdb_member_staging'] = array('VDB Profiländerungen', 'Profiländerungen überprüfen und freischalten/verwerfen.');
+$GLOBALS['TL_LANG']['MOD']['vdb_stat'] = array('VDB Statistik', 'Artikel und Inhaltselemente verwalten.');
+$GLOBALS['TL_LANG']['MOD']['vdb_member_administration'] = array('VDB Mitgliederadministrat.', 'Mitgliederkonten verwalten.');
 

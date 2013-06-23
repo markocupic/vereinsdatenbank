@@ -23,7 +23,7 @@
  * @filesource
  */
 
-class BackendVereinsdatenbank extends BackendModule
+class BackendVereinsdatenbankMemberStaging extends BackendModule
 {
     public $strTemplate = 'be_vereinsdatenbank';
 
@@ -74,7 +74,7 @@ class BackendVereinsdatenbank extends BackendModule
                 // Delete dataRecord in tbl_member_staging if the discard button was clicked
                 if ($this->Input->post('FORM_SUBMIT') == 'member_staging' && $this->Input->post('discard')) {
                     $this->Database->prepare('DELETE FROM tbl_member_staging WHERE pid=?')->execute($this->Input->get('id'));
-                    $this->redirect('contao/main.php?do=member_staging');
+                    $this->redirect('contao/main.php?do=vdb_member_staging');
                 }
 
                 $this->loadLanguageFile('tl_member');
@@ -183,12 +183,12 @@ class BackendVereinsdatenbank extends BackendModule
                 if ($this->Input->post('FORM_SUBMIT') == 'member_staging' && $this->Input->post('adopt') && !$hasErrors) {
                     $this->Database->prepare('DELETE FROM tbl_member_staging WHERE pid=?')->execute($this->Input->get('id'));
                     // redirect to the main page
-                    $this->redirect('contao/main.php?do=member_staging');
+                    $this->redirect('contao/main.php?do=vdb_member_staging');
                 }
 
                 // Add som Template vars
                 $objTemplate->modifiedFields = implode(',', $arrModifiedFields);
-                $objTemplate->action = 'contao/main.php?do=member_staging&action=show_entry&id=' . $this->Input->get('id');
+                $objTemplate->action = 'contao/main.php?do=vdb_member_staging&action=show_entry&id=' . $this->Input->get('id');
                 $objTemplate->arrDataRecord = $arrDataRecord;
                 $this->Template->headline = $GLOBALS['TL_LANG']['vereinsdatenbank']['be']['headline_1'];
                 $this->Template->partial = $objTemplate->parse();
