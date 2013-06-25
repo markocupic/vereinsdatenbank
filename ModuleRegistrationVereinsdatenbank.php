@@ -76,7 +76,6 @@ class ModuleRegistrationVereinsdatenbank extends Module
     protected function compile()
     {
         global $objPage;
-
         $GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
         $this->loadDataContainer('tl_member');
@@ -208,7 +207,7 @@ class ModuleRegistrationVereinsdatenbank extends Module
                 }
                 /***** check for valid email confirmation  *****/
                 if ($objWidget->rgxp == 'email') {
-                    if ($this->Input->post($objWidget->name . '_confirm')) {
+                    if ($this->Input->post($objWidget->name)) {
                         if ($this->Input->post($objWidget->name . '_confirm') != $this->Input->post($objWidget->name)) {
                             $objWidget->addError($GLOBALS['TL_LANG']['ERR']['emailMatch']);
                         }

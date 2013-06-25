@@ -58,7 +58,7 @@ class BackendVereinsdatenbankMemberStaging extends BackendModule
         switch ($this->Input->get('action')) {
             default:
                 $objTemplate = new BackendTemplate('partial_member_staging_list_entries');
-                $objMemberStaging = $this->Database->execute('SELECT * FROM tbl_member_staging ORDER BY id');
+                $objMemberStaging = $this->Database->execute('SELECT * FROM tbl_member_staging,tl_member WHERE tbl_member_staging.pid=tl_member.id ORDER BY tl_member.id');
                 if ($objMemberStaging->numRows < 1) {
                     $systemMessages[] = $GLOBALS['TL_LANG']['vereinsdatenbank']['be']['system_message']['no_entries_available'];
                 } else {
