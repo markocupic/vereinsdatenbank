@@ -32,9 +32,9 @@
 /**
  * Front end modules
  */
-$GLOBALS['FE_MOD']['vereinsdatenbank']['personalDataVereinsdatenbank'] = 'ModulePersonalDataVereinsdatenbank';
-$GLOBALS['FE_MOD']['vereinsdatenbank']['registrationVereinsdatenbank'] = 'ModuleRegistrationVereinsdatenbank';
-$GLOBALS['FE_MOD']['vereinsdatenbank']['closeAccountVereinsdatenbank'] = 'ModuleCloseAccountVereinsdatenbank';
+$GLOBALS['FE_MOD']['vereinsdatenbank']['personalDataVereinsdatenbank'] = 'ModuleVereinsdatenbankPersonalData';
+$GLOBALS['FE_MOD']['vereinsdatenbank']['registrationVereinsdatenbank'] = 'ModuleVereinsdatenbankRegistration';
+$GLOBALS['FE_MOD']['vereinsdatenbank']['closeAccountVereinsdatenbank'] = 'ModuleVereinsdatenbankCloseAccount';
 
 
 

@@ -31,7 +31,7 @@
  * @author     Leo Feyer <https://contao.org>
  * @package    Controller
  */
-class ModuleRegistrationVereinsdatenbank extends Module
+class ModuleVereinsdatenbankRegistration extends Module
 {
 
     /**
