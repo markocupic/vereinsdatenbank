@@ -293,7 +293,7 @@ $GLOBALS['TL_DCA']['tl_member']['list']['sorting']['filter'][] = array
  * Create the custom palette
  */
 $fields = array();
-$fields['address'] = array('vdb_belongs_to_vdb', 'firstname', 'lastname', 'street', 'postal', 'city', 'email', 'phone', 'fax', ';{login_legend}','username', 'password');
+$fields['address'] = array('vdb_belongs_to_vdb', 'firstname', 'lastname', 'street', 'postal', 'city', 'email', 'website', 'phone', 'fax', ';{login_legend}','username', 'password');
 
 foreach ($GLOBALS['TL_DCA']['tl_member']['fields'] as $k => $v) {
     if (preg_match('/^vdb_bereich/', $k) && !in_array($k, $fields['address'])) {
