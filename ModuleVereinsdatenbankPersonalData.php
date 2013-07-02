@@ -170,7 +170,6 @@ class ModuleVereinsdatenbankPersonalData extends Module
                         $objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varValue));
                     }
                 }
-
                 // Make sure that unique fields are unique (check the eval setting first -> #3063)
                 if ($arrData['eval']['unique'] && $varValue != '') {
                     $objUnique = $this->Database->prepare("SELECT * FROM tl_member WHERE " . $field . "=? AND id!=?")
@@ -182,19 +181,23 @@ class ModuleVereinsdatenbankPersonalData extends Module
                     }
                 }
 
-                // Save callback (see #5247)
-                if (!$objWidget->hasErrors() && is_array($arrData['save_callback'])) {
-                    foreach ($arrData['save_callback'] as $callback) {
-                        $this->import($callback[0]);
+                /**********************/
+                /** Save Callback for other fields will be executed in BackendVereinsdatenbankMemberStaging::compile() */
+                if ($objWidget instanceof FormPassword) {
+                    if (!$objWidget->hasErrors() && is_array($arrData['save_callback'])) {
+                        foreach ($arrData['save_callback'] as $callback) {
+                            $this->import($callback[0]);
 
-                        try {
-                            $varValue = $this->$callback[0]->$callback[1]($varValue, $this->User, $this);
-                        } catch (Exception $e) {
-                            $objWidget->class = 'error';
-                            $objWidget->addError($e->getMessage());
+                            try {
+                                $varValue = $this->$callback[0]->$callback[1]($varValue, $this->User, $this);
+                            } catch (Exception $e) {
+                                $objWidget->class = 'error';
+                                $objWidget->addError($e->getMessage());
+                            }
                         }
                     }
                 }
+                /**********************/
 
                 // Do not submit if there are errors
                 if ($objWidget->hasErrors()) {
@@ -346,7 +349,6 @@ class ModuleVereinsdatenbankPersonalData extends Module
     private function saveField($objWidget, $field, $varSave)
     {
 
-        // HOOK: set new password callback
         if ($objWidget instanceof FormPassword || $field == 'username') {
             // Save field
             $this->Database->prepare("UPDATE tl_member SET " . $field . "=? WHERE id=?")

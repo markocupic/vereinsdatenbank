@@ -93,6 +93,7 @@ class BackendVereinsdatenbankMemberStaging extends BackendModule
                 $arrDataRecord = array();
                 $arrModifiedFields = array();
                 $arrEditableFields = unserialize($arrMemberStaging['editableFields']);
+
                 foreach ($arrEditableFields as $field) {
 
                     if ($arrMemberStaging[$field] != $arrMember[$field]) {
@@ -166,8 +167,30 @@ class BackendVereinsdatenbankMemberStaging extends BackendModule
                                 $hasErrors = true;
                             } // Update
                             elseif ($objWidgetStaging->submitInput() && $this->Input->post('group_' . $field) == 'adopt_modification') {
-                                $set = array($field => $varSave);
-                                $this->Database->prepare('UPDATE tl_member %s WHERE id=?')->set($set)->execute($this->Input->get('id'));
+
+                                // Save callback -> important for the mailusername extension from a.schempp
+                                if (is_array($arrData['save_callback'])) {
+                                    foreach ($arrData['save_callback'] as $callback) {
+                                        $this->import($callback[0]);
+                                        try {
+                                            $objUser = $this->Database->prepare('SELECT * FROM tbl_member_staging WHERE pid=?')->execute($this->Input->get('id'));
+                                            $objUser->id = $this->Input->get('id');
+                                            $varSave = $this->$callback[0]->$callback[1]($varSave, $objUser, $this);
+                                        } catch (Exception $e) {
+                                            $objWidgetStaging->class = 'error';
+                                            $errorMessage = 'Error in ' . __METHOD__ . ' on line: ' . __LINE__ . '. ' . $e->getMessage();
+                                            $objWidgetStaging->addError($errorMessage);
+                                            $hasErrors = true;
+                                        }
+                                    }
+                                }
+
+                                if (!$hasErrors) {
+                                    $set = array($field => $varSave);
+                                    $this->Database->prepare('UPDATE tl_member %s WHERE id=?')->set($set)->execute($this->Input->get('id'));
+                                } // Update
+
+
                             }
                         }
 
