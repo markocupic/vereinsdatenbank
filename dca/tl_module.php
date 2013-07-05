@@ -23,11 +23,9 @@
  * PHP version 5
  * @copyright  Leo Feyer 2005-2013
  * @author     Leo Feyer <https://contao.org>
- * @package    Backend
- * @license    LGPL
+ * @package    Vereinsdatenbank
  * @filesource
  */
-
 
 /**
  * Table tl_module
@@ -113,3 +111,4 @@ class tl_module_vdb extends Backend
         return $this->getTemplateGroup('vdb_member_', $intPid);
     }
 }
+?>

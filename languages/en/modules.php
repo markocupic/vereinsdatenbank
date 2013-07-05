@@ -23,8 +23,7 @@
  * PHP version 5
  * @copyright  Leo Feyer 2005-2013
  * @author     Leo Feyer <https://contao.org>
- * @package    Frontend
- * @license    LGPL
+ * @package    Vereinsdatenbank
  * @filesource
  */
 
@@ -44,3 +43,4 @@ $GLOBALS['TL_LANG']['MOD']['vdb_member_staging'] = array('VDB Profiländerungen'
 $GLOBALS['TL_LANG']['MOD']['vdb_stat'] = array('VDB Statistik', 'Artikel und Inhaltselemente verwalten.');
 $GLOBALS['TL_LANG']['MOD']['vdb_member_administration'] = array('VDB Mitgliederadministrat.', 'Mitgliederkonten verwalten.');
 
+?>
