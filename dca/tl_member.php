@@ -281,6 +281,13 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_bild'] = array
 );
 
 
+/**
+ * add field vdb_belongs_to_vdb to the palette
+ */
+$GLOBALS['TL_DCA']['tl_member']['palettes']['default'] = str_replace('firstname', 'vdb_belongs_to_vdb,firstname', $GLOBALS['TL_DCA']['tl_member']['palettes']['default']);
+
+
+
 
 if ($_GET['do'] != 'vdb_member_administration') {
     return;

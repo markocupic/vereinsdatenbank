@@ -52,12 +52,7 @@ class ModuleVereinsdatenbankPersonalData extends Module
      */
     public function generate()
     {
-        /***************/
-        // Create Staging Table, if there are no inserts
-        $this->createStagingTable();
-        /***************/
-
-        if (TL_MODE == 'BE') {
+       if (TL_MODE == 'BE') {
             $objTemplate = new BackendTemplate('be_wildcard');
 
             $objTemplate->wildcard = '### PERSONAL DATA ###';
@@ -414,27 +409,6 @@ class ModuleVereinsdatenbankPersonalData extends Module
         }
     }
 
-    /**
-     * Create Staging Table / copy from tl_member
-     */
-    public function createStagingTable()
-    {
-        if ($this->Database->tableExists('tbl_member_staging')) {
-            $blnTableExists = true;
-            $objMemberStaging = $this->Database->execute('SELECT * FROM tbl_member_staging');
-        } else {
-            $blnTableExists = false;
-        }
-        if ($objMemberStaging->numRows < 1 || $blnTableExists === false) {
-            $this->Database->query("DROP TABLE IF EXISTS tbl_member_staging");
-            $this->Database->query("CREATE TABLE tbl_member_staging AS SELECT * FROM tl_member");
-            $this->Database->query("TRUNCATE TABLE tbl_member_staging");
-            $this->Database->query("ALTER TABLE tbl_member_staging ADD PRIMARY KEY (id)");
-            $this->Database->query("ALTER TABLE tbl_member_staging ADD pid INT(12) NOT NULL AFTER id");
-            $this->Database->query("ALTER TABLE tbl_member_staging ADD moduleId INT(12) NOT NULL AFTER pid");
-            $this->Database->query("ALTER TABLE tbl_member_staging ADD editableFields text NULL AFTER moduleId");
-        }
-    }
 
     /**
      * @param $pid

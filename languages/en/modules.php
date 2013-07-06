@@ -31,8 +31,9 @@
 /**
  * Front end modules
  */
-
-$GLOBALS['TL_LANG']['FMD']['personalDataVereinsdatenbank'] = array('Persönliche Daten mit Staging-Funktion', 'Erzeugt ein Formular zur Bearbeitung der Benutzerdaten.');
+$GLOBALS['TL_LANG']['FMD']['vereinsdatenbank'] = 'Vereinsdatenbank Module';
+$GLOBALS['TL_LANG']['FMD']['personalDataVereinsdatenbank'] = array('Vereinsdatenbank Profil bearbeiten', 'Erzeugt ein Formular zur Bearbeitung der Benutzerdaten.');
+$GLOBALS['TL_LANG']['FMD']['registrationVereinsdatenbank'] = array('Vereinsdatenbank Registrierungsformular', 'Erzeugt ein Formular zur Bearbeitung der Benutzerdaten.');
 $GLOBALS['TL_LANG']['FMD']['closeAccountVereinsdatenbank'] = array('Vereinsdatenbank Konto schließen', 'Erzeugt ein Formular zur Löschung eines Benutzerkontos.');
 
 /**

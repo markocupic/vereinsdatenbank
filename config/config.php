@@ -29,6 +29,12 @@
 
 
 /**
+ * Hooks
+ */
+$GLOBALS['TL_HOOKS']['parseBackendTemplate'][] = array('VereinsdatenbankMaintenance', 'createStagingTable');
+
+
+/**
  * Front end modules
  */
 $GLOBALS['FE_MOD']['vereinsdatenbank']['personalDataVereinsdatenbank'] = 'ModuleVereinsdatenbankPersonalData';
@@ -63,3 +69,4 @@ $GLOBALS['BE_MOD']['vdb_vereinsdatenbank']['vdb_member_administration'] = array
 $GLOBALS['TL_HOOKS']['generatePage'][] = array('VereinsdatenbankEmailNotification', 'notifyEditor');
 
 
+?>

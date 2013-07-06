@@ -3,7 +3,7 @@
     <table>
         <?php foreach ($this->arrRows as $arrRow): ?>
         <tr>
-            <td><?php echo $arrRow['vdb_vereinsname']; ?></td>
+            <td><?php echo $arrRow['vdb_vereinsname']!= '' ? $arrRow['vdb_vereinsname'] : $arrRow['firstname'] . ' ' . $arrRow['lastname']; ?></td>
             <td class="watch">
                 <a href="contao/main.php?do=vdb_member_staging&action=show_entry&id=<?php echo $arrRow['pid']; ?>"
                    title="merge">
