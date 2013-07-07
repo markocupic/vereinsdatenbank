@@ -46,7 +46,8 @@ class VereinsdatenbankMaintenance extends System
             if (is_file(TL_ROOT . '/' . $src)) {
                 if (!in_array($src, $arrImages))
                 {
-                    if (strpos($src, 'vdb_') !== null)
+                    // Delete files with the vdb_ prefix
+                    if (strpos($src, 'db_'))
                     {
                         $file = new File($src);
                         $file->delete();
