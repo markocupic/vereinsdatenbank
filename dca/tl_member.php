@@ -189,7 +189,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_taetigkeitsmerkmale_zweitsprache'
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'textarea',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr')
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr translation')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_egagiert_fuer'] = array
@@ -211,7 +211,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_egagiert_fuer_zweitsprache'] = ar
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'textarea',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr')
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr translation')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_besondere_aktion'] = array
@@ -233,7 +233,7 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_besondere_aktion_zweitsprache'] =
     'sorting' => true,
     'flag' => 1,
     'inputType' => 'textarea',
-    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr')
+    'eval' => array('mandatory' => false, 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'associatonProfile', 'tl_class' => 'clr translation')
 );
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['vdb_nachrichten_erlauben'] = array

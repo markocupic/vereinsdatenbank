@@ -52,7 +52,7 @@ class ModuleVereinsdatenbankPersonalData extends Module
      */
     public function generate()
     {
-       if (TL_MODE == 'BE') {
+        if (TL_MODE == 'BE') {
             $objTemplate = new BackendTemplate('be_wildcard');
 
             $objTemplate->wildcard = '### PERSONAL DATA ###';
@@ -147,6 +147,13 @@ class ModuleVereinsdatenbankPersonalData extends Module
 
             $objWidget->storeValues = true;
             $objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
+
+            /***************/
+            if (strpos($arrData['eval']['tl_class'], 'translation')) {
+                // Add a special class property if the field is a translation field
+                $objWidget->rowClass .= ' translation';
+            }
+            /***************/
 
             // Increase the row count if it is a password field
             if ($objWidget instanceof FormPassword) {
@@ -322,7 +329,7 @@ class ModuleVereinsdatenbankPersonalData extends Module
         $this->Template->action = $this->getIndexFreeRequest();
         $this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
         $this->Template->rowLast = 'row_' . $row . ((($row % 2) == 0) ? ' even' : ' odd');
-
+        echo $objWidget->class . $arrData['eval']['class'];
         // HOOK: add memberlist fields
         if (in_array('memberlist', $this->Config->getActiveModules())) {
             $this->Template->profile = $arrFields['profile'];
@@ -424,4 +431,5 @@ class ModuleVereinsdatenbankPersonalData extends Module
 
 
 }
+
 ?>
