@@ -256,7 +256,7 @@ class ModuleVereinsdatenbankPersonalData extends Module
             } else {
                 if ($_FILES[$field]['name']) {
                     $ext = pathinfo($_FILES[$field]['name'], PATHINFO_EXTENSION);
-                    $filename = time() . '.' . strtolower($ext);
+                    $filename = 'vdb_' . time() . '.' . strtolower($ext);
                     $_FILES[$field]['name'] = $filename;
                     $fileSRC = $this->vdb_image_folder . '/' . $filename;
                 }
@@ -265,6 +265,9 @@ class ModuleVereinsdatenbankPersonalData extends Module
             if ($fileSRC && !$objWidget->hasErrors()) {
                 // If all ok, write to db
                 $this->saveField($objWidget, 'vdb_bild', $fileSRC);
+                // tidy up orphaned images
+                $objMaintenance = new VereinsdatenbankMaintenance;
+                $objMaintenance->tidyUpImageFolder($this->vdb_image_folder);
             }
             // add uploadfield to template
             $strGroup = $arrData['eval']['feGroup'];
@@ -379,7 +382,7 @@ class ModuleVereinsdatenbankPersonalData extends Module
                     $set['moduleId'] = $this->id;
                     $set[$field] = $varSave;
                     unset($set['id']);
-                    $this->Database->prepare("INSERT INTO tbl_member_staging %s")->set($set)->executeUncached();
+                    $this->Database->prepare("INSERT INTO tbl_member_staging %s")->set($set)->execute();
                 }
             } else {
                 // update tbl_member_staging

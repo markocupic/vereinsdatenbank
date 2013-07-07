@@ -9,11 +9,61 @@
 class VereinsdatenbankMaintenance extends System
 {
     /**
+     * delete orphaned images
+     * @param $strFolder
+     */
+    public function tidyUpImageFolder($strFolder)
+    {
+        if (!file_exists(TL_ROOT . '/' . $strFolder)) {
+            return;
+        }
+
+        $arrImages_1 = array();
+        $arrImages_2 = array();
+
+        $this->import('Database');
+        if ($this->Database->fieldExists('vdb_bild', 'tl_member')) {
+            $objMember = $this->Database->execute('SELECT vdb_bild FROM tl_member');
+            if ($objMember->numRows) {
+                $arrImages_1 = $objMember->fetchEach('vdb_bild');
+            }
+        }
+        if ($this->Database->tableExists('tbl_member_staging')) {
+            if ($this->Database->fieldExists('vdb_bild', 'tbl_member_staging')) {
+                $objMember = $this->Database->execute('SELECT vdb_bild FROM tbl_member_staging');
+                if ($objMember->numRows) {
+                    $arrImages_2 = $objMember->fetchEach('vdb_bild');
+                }
+
+            }
+        }
+
+        $arrImages = array_merge($arrImages_1,$arrImages_2);
+
+        $arrFiles = scan(TL_ROOT . '/' . $strFolder);
+        foreach ($arrFiles as $strFile) {
+            $src = $strFolder . '/' . $strFile;
+            if (is_file(TL_ROOT . '/' . $src)) {
+                if (!in_array($src, $arrImages))
+                {
+                    if (strpos($src, 'vdb_') !== null)
+                    {
+                        $file = new File($src);
+                        $file->delete();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Create Staging Table / copy from tl_member
+     * @param $strContent
+     * @param $strTemplate
+     * @return mixed
      */
     public function createStagingTable($strContent, $strTemplate)
     {
-        return $strContent;
         $this->import('Database');
         //$this->Database->query("DROP TABLE IF EXISTS tbl_member_staging");
         if ($this->Database->tableExists('tbl_member_staging')) {
@@ -22,14 +72,17 @@ class VereinsdatenbankMaintenance extends System
         } else {
             $blnTableExists = false;
         }
-        if ($objMemberStaging->numRows < 1 || $blnTableExists === false) {
+        if ($objMemberStaging->numRows < 1 || !$blnTableExists) {
             try {
                 $this->Database->query("DROP TABLE IF EXISTS tbl_member_staging");
                 $this->Database->query("CREATE TABLE IF NOT EXISTS tbl_member_staging AS SELECT * FROM tl_member");
                 //sleep(1);
                 $this->Database->query("TRUNCATE TABLE tbl_member_staging");
-                //$this->Database->query("ALTER TABLE tbl_member_staging ADD PRIMARY KEY AUTO_INCREMENT (id)");
+                $this->Database->query("ALTER TABLE  `tbl_member_staging` ENGINE = MYISAM");
+                $this->Database->query("ALTER TABLE  `tbl_member_staging` ADD PRIMARY KEY (  `id` )");
+                $this->Database->query("ALTER TABLE  `tbl_member_staging` CHANGE  `id`  `id` INT( 12 ) UNSIGNED NOT NULL AUTO_INCREMENT");
                 $this->Database->query("ALTER TABLE tbl_member_staging ADD pid INT(12) NOT NULL AFTER id");
+                $this->Database->query("ALTER TABLE  `tbl_member_staging` ADD UNIQUE ( `pid` )");
                 $this->Database->query("ALTER TABLE tbl_member_staging ADD moduleId INT(12) NOT NULL AFTER pid");
                 $this->Database->query("ALTER TABLE tbl_member_staging ADD editableFields text NULL AFTER moduleId");
             } catch (Exception $e) {
@@ -68,8 +121,6 @@ class VereinsdatenbankMaintenance extends System
             + sin( radians(geo_breitengrad_p2) ) * sin( radians( geo_breitengrad_p1 ) ) )
         );
         ");
-
-
 
         return $strContent;
     }
