@@ -276,6 +276,8 @@ class ModuleVereinsdatenbankPersonalData extends Module
         $this->Template->activitySectorDetails = $GLOBALS['TL_LANG']['tl_member']['activitySector'];
         $this->Template->associationProfileDetails = $GLOBALS['TL_LANG']['tl_member']['associationProfile'];
         $this->Template->imageUploadDetails = $GLOBALS['TL_LANG']['tl_member']['imageUpload'];
+        $this->Template->agbDetails = $GLOBALS['TL_LANG']['tl_member']['agb'];
+
 
         // Add groups
         foreach ($arrFields as $k => $v) {
