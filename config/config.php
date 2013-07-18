@@ -28,11 +28,6 @@
  */
 
 
-/**
- * Hooks
- */
-$GLOBALS['TL_HOOKS']['parseBackendTemplate'][] = array('VereinsdatenbankMaintenance', 'createStagingTable');
-
 
 /**
  * Front end modules

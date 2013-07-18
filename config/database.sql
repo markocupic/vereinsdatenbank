@@ -44,6 +44,19 @@ CREATE TABLE `tl_member` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
+--
+-- Table `tl_member_staging`
+--
+CREATE TABLE `tl_member_staging` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `pid` int(10) unsigned NOT NULL default '0',
+  `moduleId` int(10) unsigned NOT NULL default '0',
+  `tstamp` int(10) unsigned NOT NULL default '0',
+  `description` varchar(255) NOT NULL default '',
+  `data` blob NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 
 --
 -- Table `tl_module`

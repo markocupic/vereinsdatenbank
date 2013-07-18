@@ -1,15 +1,45 @@
-<?php
+<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+
 /**
- * Created by JetBrains PhpStorm.
- * User: Marko
- * Date: 05.07.13
- * Time: 15:46
- * To change this template use File | Settings | File Templates.
+ * Contao Open Source CMS
+ * Copyright (C) 2005-2013 Leo Feyer
+ * Formerly known as TYPOlight Open Source CMS.
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation, either
+ * version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this program. If not, please visit the Free
+ * Software Foundation website at <http://www.gnu.org/licenses/>.
+ * PHP version 5
+ * @copyright  Leo Feyer 2005-2013
+ * @author     Leo Feyer <https://contao.org>
+ * @package    Vereinsdatenbank
+ * @filesource
+ */
+
+
+/**
+ * Class VereinsdatenbankMaintenance
+ * Provide methods administrating club properties.
+ * @copyright  Marko Cupic 2013
+ * @author     m.cupic@gmx.ch
+ * @package    Vereinsdatenbank
  */
 class VereinsdatenbankMaintenance extends System
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
-     * delete orphaned images
+     * delete orphaned images in the filesystem
      * @param $strFolder
      */
     public function tidyUpImageFolder($strFolder)
@@ -22,33 +52,34 @@ class VereinsdatenbankMaintenance extends System
         $arrImages_2 = array();
 
         $this->import('Database');
+        // get images sources from tl_member
         if ($this->Database->fieldExists('vdb_bild', 'tl_member')) {
             $objMember = $this->Database->execute('SELECT vdb_bild FROM tl_member');
             if ($objMember->numRows) {
                 $arrImages_1 = $objMember->fetchEach('vdb_bild');
             }
         }
-        if ($this->Database->tableExists('tbl_member_staging')) {
-            if ($this->Database->fieldExists('vdb_bild', 'tbl_member_staging')) {
-                $objMember = $this->Database->execute('SELECT vdb_bild FROM tbl_member_staging');
-                if ($objMember->numRows) {
-                    $arrImages_2 = $objMember->fetchEach('vdb_bild');
-                }
 
+        // get images sources from tl_member_staging
+        if ($this->Database->tableExists('tl_member_staging')) {
+            $objMember = $this->Database->execute('SELECT * FROM tl_member_staging');
+            while ($objMember->next()) {
+                if ($objMember->data != '') {
+                    $arrUser = unserialize($objMember->data);
+                    $arrImages_2[] = $arrUser['vdb_bild'];
+                }
             }
         }
 
-        $arrImages = array_merge($arrImages_1,$arrImages_2);
+        $arrImages = array_merge($arrImages_1, $arrImages_2);
 
         $arrFiles = scan(TL_ROOT . '/' . $strFolder);
         foreach ($arrFiles as $strFile) {
             $src = $strFolder . '/' . $strFile;
             if (is_file(TL_ROOT . '/' . $src)) {
-                if (!in_array($src, $arrImages))
-                {
+                if (!in_array($src, $arrImages)) {
                     // Delete files with the vdb_ prefix
-                    if (strpos($src, 'db_'))
-                    {
+                    if (preg_match('/vdb_/', $src)) {
                         $file = new File($src);
                         $file->delete();
                     }
@@ -56,73 +87,5 @@ class VereinsdatenbankMaintenance extends System
             }
         }
     }
-
-    /**
-     * Create Staging Table / copy from tl_member
-     * @param $strContent
-     * @param $strTemplate
-     * @return mixed
-     */
-    public function createStagingTable($strContent, $strTemplate)
-    {
-        $this->import('Database');
-        //$this->Database->query("DROP TABLE IF EXISTS tbl_member_staging");
-        if ($this->Database->tableExists('tbl_member_staging')) {
-            $blnTableExists = true;
-            $objMemberStaging = $this->Database->execute('SELECT * FROM tbl_member_staging');
-        } else {
-            $blnTableExists = false;
-        }
-        if ($objMemberStaging->numRows < 1 || !$blnTableExists) {
-            try {
-                $this->Database->query("DROP TABLE IF EXISTS tbl_member_staging");
-                $this->Database->query("CREATE TABLE IF NOT EXISTS tbl_member_staging AS SELECT * FROM tl_member");
-                //sleep(1);
-                $this->Database->query("TRUNCATE TABLE tbl_member_staging");
-                $this->Database->query("ALTER TABLE  `tbl_member_staging` ENGINE = MYISAM");
-                $this->Database->query("ALTER TABLE  `tbl_member_staging` ADD PRIMARY KEY (  `id` )");
-                $this->Database->query("ALTER TABLE  `tbl_member_staging` CHANGE  `id`  `id` INT( 12 ) UNSIGNED NOT NULL AUTO_INCREMENT");
-                $this->Database->query("ALTER TABLE tbl_member_staging ADD pid INT(12) NOT NULL AFTER id");
-                $this->Database->query("ALTER TABLE  `tbl_member_staging` ADD UNIQUE ( `pid` )");
-                $this->Database->query("ALTER TABLE tbl_member_staging ADD moduleId INT(12) NOT NULL AFTER pid");
-                $this->Database->query("ALTER TABLE tbl_member_staging ADD editableFields text NULL AFTER moduleId");
-            } catch (Exception $e) {
-                echo $e->getMessage();
-            }
-        }
-
-
-        // check for MySQL ver. > 4.0.1
-        $objVer = $this->Database->query("SHOW VARIABLES LIKE 'version'");
-        if (version_compare($objVer->first()->Value, '4.0.1', '<')) {
-            die('Sorry, the extension requires MySQL > 4.0.1');
-        }
-
-        // add FULLTEXT KEY to tl_member
-        try {
-            $this->Database->query('ALTER TABLE tl_member DROP INDEX `vdb_vereinsdatenbank_suche`');
-        } catch (Exception $e) {
-        }
-        $this->arrSearchableFields = array(vdb_vereinsname, firstname, lastname, city, vdb_taetigkeitsmerkmale, vdb_taetigkeitsmerkmale_zweitsprache, vdb_egagiert_fuer, vdb_egagiert_fuer_zweitsprache, vdb_besondere_aktion, vdb_besondere_aktion_zweitsprache);
-        $objKey = $this->Database->prepare('SHOW INDEX FROM tl_member WHERE Key_name=?')->execute('vdb_vereinsdatenbank_suche');
-        if (!$objKey->numRows) {
-            $this->Database->query('ALTER TABLE tl_member ADD FULLTEXT KEY `vdb_vereinsdatenbank_suche` (' . implode(',', $this->arrSearchableFields) . ')');
-        }
-
-        // first drop stored procedure and then recreate it
-        $this->Database->query("DROP FUNCTION IF EXISTS GoogleDistance_KM;");
-        $this->Database->query("
-        CREATE FUNCTION `GoogleDistance_KM`(
-            geo_breitengrad_p1 double,
-            geo_laengengrad_p1 double,
-            geo_breitengrad_p2 double,
-            geo_laengengrad_p2 double ) RETURNS double
-            RETURN (6371 * acos( cos( radians(geo_breitengrad_p2) ) * cos( radians( geo_breitengrad_p1 ) )
-            * cos( radians( geo_laengengrad_p1 ) - radians(geo_laengengrad_p2) )
-            + sin( radians(geo_breitengrad_p2) ) * sin( radians( geo_breitengrad_p1 ) ) )
-        );
-        ");
-
-        return $strContent;
-    }
 }
+?>

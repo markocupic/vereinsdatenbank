@@ -62,13 +62,13 @@
 <?php endif; ?>
 
 <!-- Vereinsprofil-Angaben -->
-<?php if ($this->associatonProfile): ?>
+<?php if ($this->associationProfile): ?>
 <fieldset>
 <legend><?php echo $this->associationProfileDetails; ?></legend>
 <?php if (!$this->tableless): ?>
 <table>
 <?php endif; ?>
-<?php foreach ($this->associatonProfile as $field) echo $field; ?>
+<?php foreach ($this->associationProfile as $field) echo $field; ?>
 <?php if (!$this->tableless): ?>
 </table>
 <?php endif; ?>
@@ -104,13 +104,13 @@
 <?php endif; ?>
 
 
-<?php if ($this->profile): ?>
+<?php if (isset($this->agb)): ?>
 <fieldset>
-<legend><?php echo $this->profileDetails; ?></legend>
+<legend><?php echo $this->agbDetails; ?></legend>
 <?php if (!$this->tableless): ?>
 <table>
 <?php endif; ?>
-<?php foreach ($this->profile as $field) echo $field; ?>
+<?php foreach ($this->agb as $field) echo $field; ?>
 <?php if (!$this->tableless): ?>
 </table>
 <?php endif; ?>
@@ -145,6 +145,18 @@
 </fieldset>
 <?php endif; ?>
 
+<?php if ($this->profile): ?>
+<fieldset>
+<legend><?php echo $this->agbDetails; ?></legend>
+<?php if (!$this->tableless): ?>
+<table>
+<?php endif; ?>
+<?php foreach ($this->profile as $field) echo $field; ?>
+<?php if (!$this->tableless): ?>
+</table>
+<?php endif; ?>
+</fieldset>
+<?php endif; ?>
 
 <?php if ($this->captcha): ?>
 <fieldset>

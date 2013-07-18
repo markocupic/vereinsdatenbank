@@ -54,7 +54,7 @@ class VereinsdatenbankEmailNotification extends System
             $oneDay = 24 * 60 * 60;
             $today_at_midnight = strtotime(date("Ymd"));
 
-            $objTblMemberStaging = $this->Database->execute('SELECT * FROM tbl_member_staging');
+            $objTblMemberStaging = $this->Database->execute('SELECT * FROM tl_member_staging');
             if ($objTblMemberStaging->numRows) {
                 $objTlLog = $this->Database->prepare('SELECT * FROM tl_log WHERE vdb_email_editor_notification_tstamp > ? ORDER BY tstamp DESC LIMIT 0,1')->execute('0');
 
@@ -65,10 +65,11 @@ class VereinsdatenbankEmailNotification extends System
                     $strBody = 'Hello!' . $nl . 'There are some new records in tl_member' . $nl;
                     $arrTo = array();
                     while ($objTblMemberStaging->next()) {
+                        $arrMemberStagingData = unserialize($objTblMemberStaging->data);
                         $objModule = $this->Database->prepare("SELECT vdb_editor_email_notification_addresses AS recipients FROM tl_module WHERE id=?")
                             ->executeUncached($objTblMemberStaging->moduleId);
                         $arrTo = array_merge(explode(',', trim($objModule->recipients)), $arrTo);
-                        $strBody .= 'Please check the profile of ' . $objTblMemberStaging->vdb_vereinsname . ' with the ID ' . $objTblMemberStaging->pid . $nl;
+                        $strBody .= 'Please check the profile of ' . $arrMemberStagingData['vdb_vereinsname'] . ' with the ID ' . $objTblMemberStaging->pid . $nl;
                     }
                     $arrTo = array_unique(array_values($arrTo));
                     $strBody .= 'This message was generated automatically by the system at ' . $_SERVER['SERVER_NAME'] . $nl;
@@ -83,7 +84,7 @@ class VereinsdatenbankEmailNotification extends System
                         //$email->html = $strBody;
                         $email->sendTo(implode(',', $arrTo));
                         // Write to tl_log
-                        $this->log('Vereinsdatenbank: The Editors (' . implode(',', $arrTo) . ') were notified about new entries in tbl_member_staging.', 'VereinsdatenbankEmailNotification notifyEditor()', TL_GENERAL);
+                        $this->log('Vereinsdatenbank: The Editors (' . implode(',', $arrTo) . ') were notified about new entries in tl_member_staging.', 'VereinsdatenbankEmailNotification notifyEditor()', TL_GENERAL);
                         $objTlLog = $this->Database->execute('SELECT id FROM tl_log ORDER BY id DESC LIMIT 0,1');
                         $set = array('vdb_email_editor_notification_tstamp' => $today_at_midnight);
                         $this->Database->prepare('UPDATE tl_log %s WHERE id=?')->set($set)->execute($objTlLog->id);

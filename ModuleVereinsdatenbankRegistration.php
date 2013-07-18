@@ -261,6 +261,22 @@ class ModuleVereinsdatenbankRegistration extends Module
             }
             /****************/
 
+            /********Append File Uploader to Template*******/
+            if ($field == 'vdb_bild' && strlen($this->vdb_image_folder) && is_dir(TL_ROOT . '/' . $this->vdb_image_folder)) {
+                $objWidget = $this->generateImageUploader();
+                $hasUpload = true;
+                $objWidget->validate();
+
+                if ($objWidget->fileSRC && !$objWidget->hasErrors()) {
+                    // If all ok, write to db
+                    $arrUser['vdb_bild'] = $objWidget->fileSRC;
+                }
+                // add uploadfield to template
+                $strGroup = $arrData['eval']['feGroup'];
+                $temp = $objWidget->parse();
+            }
+            /***************/
+
 
             $this->Template->fields .= $temp;
             $arrFields[$arrData['eval']['feGroup']][$field] .= $temp;
@@ -272,39 +288,7 @@ class ModuleVereinsdatenbankRegistration extends Module
         $arrUser['vdb_belongs_to_vdb'] = 1;
         /*******************/
 
-        /********Append File Uploader to Template*******/
-        if (strlen($this->vdb_image_folder)) {
-            $hasUpload = true;
-            $field = 'vdb_file_upload';
 
-            // set the uplaod-folder for the image
-            $arrData = $GLOBALS['TL_DCA']['tl_module']['fields'][$field];
-            $arrData['eval']['uploadFolder'] = $this->vdb_image_folder;
-            $strClass = $GLOBALS['TL_FFL'][$arrData['inputType']];
-            $objWidget = new $strClass($this->prepareForWidget($arrData, $field));
-            unset($fileSRC);
-            if (!is_dir(TL_ROOT . '/' . $this->vdb_image_folder)) {
-                $objWidget->addError('Upload-folder not defined!');
-            } else {
-                if ($_FILES[$field]['name']) {
-                    $ext = pathinfo($_FILES[$field]['name'], PATHINFO_EXTENSION);
-                    $filename = time() . '.' . strtolower($ext);
-                    $_FILES[$field]['name'] = $filename;
-                    $fileSRC = $this->vdb_image_folder . '/' . $filename;
-                }
-            }
-            $objWidget->validate();
-            if ($fileSRC && !$objWidget->hasErrors()) {
-                // If all ok, write to db
-                $arrUser['vdb_bild'] = $fileSRC;
-            }
-            // add uploadfield to template
-            $strGroup = $arrData['eval']['feGroup'];
-            $temp = $objWidget->parse();
-            $this->Template->fields .= $temp;
-            $arrFields[$strGroup][$field] .= $temp;
-        }
-        /***************/
 
         // Captcha
         if (!$this->disableCaptcha) {
@@ -331,8 +315,9 @@ class ModuleVereinsdatenbankRegistration extends Module
         $this->Template->captchaDetails = $GLOBALS['TL_LANG']['MSC']['securityQuestion'];
         /********add legends ********/
         $this->Template->activitySectorDetails = $GLOBALS['TL_LANG']['tl_member']['activitySector'];
-        $this->Template->associationProfileDetails = $GLOBALS['TL_LANG']['tl_member']['associatonProfile'];
+        $this->Template->associationProfileDetails = $GLOBALS['TL_LANG']['tl_member']['associationProfile'];
         $this->Template->imageUploadDetails = $GLOBALS['TL_LANG']['tl_member']['imageUpload'];
+        $this->Template->agbDetails = $GLOBALS['TL_LANG']['tl_member']['agb'];
 
 
 
@@ -340,6 +325,7 @@ class ModuleVereinsdatenbankRegistration extends Module
         foreach ($arrFields as $k => $v) {
             $this->Template->$k = $v;
         }
+
 
         $this->Template->captcha = $arrFields['captcha'];
         $this->Template->formId = 'tl_registration';
@@ -605,6 +591,41 @@ class ModuleVereinsdatenbankRegistration extends Module
         //$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
 
         $this->log('A new user (ID ' . $intId . ') has registered on the website', 'ModuleRegistration sendAdminNotification()', TL_ACCESS);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function generateImageUploader()
+    {
+
+        $field = 'vdb_bild';
+
+        // set the uplaod-folder for the image
+        $arrData = $GLOBALS['TL_DCA']['tl_member']['fields'][$field];
+        $arrData['inputType'] = 'upload';
+        $arrData['eval']['uploadFolder'] = $this->vdb_image_folder;
+        $arrData['eval']['extensions'] = 'jpg,jpeg,png,gif';
+        $arrData['eval']['storeFile'] = true;
+        $arrData['eval']['feGroup'] = 'imageUpload';
+        $arrData['eval']['uploadFolder'] = $this->vdb_image_folder;
+
+        $strClass = $GLOBALS['TL_FFL'][$arrData['inputType']];
+        $objWidget = new $strClass($this->prepareForWidget($arrData, $field));
+        unset($fileSRC);
+        if (!is_dir(TL_ROOT . '/' . $this->vdb_image_folder)) {
+            $objWidget->addError('Upload-folder not defined!');
+        } else {
+            if ($_FILES[$field]['name']) {
+                $ext = pathinfo($_FILES[$field]['name'], PATHINFO_EXTENSION);
+                $filename = 'vdb_' . time() . '.' . strtolower($ext);
+                $_FILES[$field]['name'] = $filename;
+                $objWidget->fileSrc = $this->vdb_image_folder . '/' . $filename;
+            }
+        }
+
+        // return widget object
+        return $objWidget;
     }
 
 

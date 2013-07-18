@@ -3,23 +3,18 @@
 /**
  * Contao Open Source CMS
  * Copyright (C) 2005-2013 Leo Feyer
- *
  * Formerly known as TYPOlight Open Source CMS.
- *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
  * Software Foundation website at <http://www.gnu.org/licenses/>.
- *
  * PHP version 5
  * @copyright  Leo Feyer 2005-2013
  * @author     Leo Feyer <https://contao.org>
@@ -30,7 +25,6 @@
 
 /**
  * Class BackendVereindsatenbankCloseAccount
- *
  * Provide methods administrating club properties.
  * @copyright  Marko Cupic 2013
  * @author     m.cupic@gmx.ch
@@ -135,7 +129,6 @@ class ModuleVereinsdatenbankCloseAccount extends Module
                 }
 
 
-
                 // Close account
                 if (!$hasErrors) {
                     // HOOK: send account ID
@@ -145,9 +138,9 @@ class ModuleVereinsdatenbankCloseAccount extends Module
                             $this->$callback[0]->$callback[1]($this->User->id, $this->reg_close, $this);
                         }
                     }
-                    // Delete children in tbl_member_staging
-                    if ($this->Database->tableExists('tbl_member_staging')) {
-                        $this->Database->prepare("DELETE FROM tbl_member_staging WHERE pid=?")
+                    // Delete children in tl_member_staging
+                    if ($this->Database->tableExists('tl_member_staging')) {
+                        $this->Database->prepare("DELETE FROM tl_member_staging WHERE pid=?")
                         ->execute($this->User->id);
                     }
 
@@ -176,7 +169,7 @@ class ModuleVereinsdatenbankCloseAccount extends Module
 
         $this->Template->fields = $temp;
 
-        $this->Template->formId = 'tlt_close_account';
+        $this->Template->formId = 'tl_close_account';
         $this->Template->action = $this->getIndexFreeRequest();
         $this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['closeAccount']);
         $this->Template->rowLast = 'row_1 row_last odd';

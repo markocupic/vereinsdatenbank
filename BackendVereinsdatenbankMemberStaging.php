@@ -3,23 +3,18 @@
 /**
  * Contao Open Source CMS
  * Copyright (C) 2005-2013 Leo Feyer
- *
  * Formerly known as TYPOlight Open Source CMS.
- *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
  * Software Foundation website at <http://www.gnu.org/licenses/>.
- *
  * PHP version 5
  * @copyright  Leo Feyer 2005-2013
  * @author     Leo Feyer <https://contao.org>
@@ -30,7 +25,6 @@
 
 /**
  * Class BackendVereindsatenbankMemberStaging
- *
  * Provide methods administrating club properties.
  * @copyright  Marko Cupic 2013
  * @author     m.cupic@gmx.ch
@@ -48,16 +42,16 @@ class BackendVereinsdatenbankMemberStaging extends BackendModule
             $GLOBALS['TL_CSS'][] = 'system/modules/vereinsdatenbank/assets/css/be_css.css';
 
             // delete orphaned data records
-            if ($this->Database->tableExists('tbl_member_staging')) {
-                $objMemberStaging = $this->Database->execute('SELECT id, pid FROM tbl_member_staging');
+            if ($this->Database->tableExists('tl_member_staging')) {
+                $objMemberStaging = $this->Database->execute('SELECT id, pid FROM tl_member_staging');
                 while ($objMemberStaging->next()) {
                     $objMember = $this->Database->prepare('SELECT * FROM tl_member WHERE id=?')->execute($objMemberStaging->pid);
                     if (!$objMember->numRows || $objMember->disable == 1) {
-                        $this->Database->prepare('DELETE FROM tbl_member_staging WHERE id=?')->execute($objMemberStaging->id);
+                        $this->Database->prepare('DELETE FROM tl_member_staging WHERE id=?')->execute($objMemberStaging->id);
                     }
                 }
             } else {
-                die('ERROR in ' . __METHOD__ . ' on line ' . __LINE__ . '. Table tbl_member_staging doesn\'t exist!');
+                die('ERROR in ' . __METHOD__ . ' on line ' . __LINE__ . '. Table tl_member_staging doesn\'t exist!');
             }
         }
 
@@ -72,11 +66,11 @@ class BackendVereinsdatenbankMemberStaging extends BackendModule
         switch ($this->Input->get('action')) {
             default:
                 $objTemplate = new BackendTemplate('partial_member_staging_list_entries');
-                $objMemberStaging = $this->Database->execute('SELECT * FROM tbl_member_staging,tl_member WHERE tbl_member_staging.pid=tl_member.id ORDER BY tl_member.id');
-                if ($objMemberStaging->numRows < 1) {
-                    $systemMessages[] = $GLOBALS['TL_LANG']['vereinsdatenbank']['be']['system_message']['no_entries_available'];
-                } else {
+                $objMemberStaging = $this->Database->execute('SELECT * FROM tl_member_staging,tl_member WHERE tl_member_staging.pid=tl_member.id ORDER BY tl_member.id');
+                if ($objMemberStaging->numRows) {
                     $objTemplate->arrRows = $objMemberStaging->fetchAllAssoc();
+                } else {
+                    $systemMessages[] = $GLOBALS['TL_LANG']['vereinsdatenbank']['be']['system_message']['no_entries_available'];
                 }
                 $this->Template->partial = $objTemplate->parse();
                 $this->Template->headline = $GLOBALS['TL_LANG']['vereinsdatenbank']['be']['headline_0'];
@@ -85,9 +79,9 @@ class BackendVereinsdatenbankMemberStaging extends BackendModule
                 break;
             case ("show_entry"):
 
-                // Delete dataRecord in tbl_member_staging if the discard button was clicked
+                // Delete dataRecord in tl_member_staging if the discard button was clicked
                 if ($this->Input->post('FORM_SUBMIT') == 'member_staging' && $this->Input->post('discard')) {
-                    $this->Database->prepare('DELETE FROM tbl_member_staging WHERE pid=?')->execute($this->Input->get('id'));
+                    $this->Database->prepare('DELETE FROM tl_member_staging WHERE pid=?')->execute($this->Input->get('id'));
                     $this->redirect('contao/main.php?do=vdb_member_staging');
                 }
 
@@ -96,16 +90,16 @@ class BackendVereinsdatenbankMemberStaging extends BackendModule
 
                 $objTemplate = new BackendTemplate('partial_member_staging_watch_entry');
 
-                // Load data records in tbl_member_staging & tl_member
-                $objMemberStaging = $this->Database->prepare('SELECT * FROM tbl_member_staging WHERE pid=?')->execute($this->Input->get('id'));
+                // Load data records in tl_member_staging & tl_member
+                $objMemberStaging = $this->Database->prepare('SELECT * FROM tl_member_staging WHERE pid=?')->limit(1)->execute($this->Input->get('id'));
                 $objMember = $this->Database->prepare('SELECT * FROM tl_member WHERE id=?')->execute($this->Input->get('id'));
-                $arrMemberStaging = $objMemberStaging->fetchAllAssoc();
-                $arrMemberStaging = $arrMemberStaging[0];
+                $arrMemberStaging = $objMemberStaging->data != '' ? unserialize($objMemberStaging->data) : array();
                 $arrMember = $objMember->fetchAllAssoc();
                 $arrMember = $arrMember[0];
 
                 $arrDataRecord = array();
                 $arrModifiedFields = array();
+
                 $arrEditableFields = unserialize($arrMemberStaging['editableFields']);
 
                 foreach ($arrEditableFields as $field) {
@@ -128,7 +122,7 @@ class BackendVereinsdatenbankMemberStaging extends BackendModule
                         $arrData['eval']['tableless'] = true;
                         $arrData['eval']['required'] = ($arrMemberStaging[$field] == '' && $arrData['eval']['mandatory']) ? true : false;
 
-                        $objWidgetStaging = new $strClass($this->prepareForWidget($arrData, $field . '_new', $arrMemberStaging[$field], '', 'tbl_member_staging'));
+                        $objWidgetStaging = new $strClass($this->prepareForWidget($arrData, $field . '_new', $arrMemberStaging[$field], '', 'tl_member_staging'));
 
                         // Continue if field is a password field
                         if ($objWidgetStaging instanceof FormPassword) {
@@ -142,7 +136,7 @@ class BackendVereinsdatenbankMemberStaging extends BackendModule
                         }
                         $objWidgetCurrent = new $strClass($this->prepareForWidget($arrData, $field . '_current', $arrMember[$field], '', 'tl_member'));
 
-                        // adopt changes from tbl_member_staging to tl_member
+                        // adopt changes from tl_member_staging to tl_member
                         if ($this->Input->post('FORM_SUBMIT') == 'member_staging' && $this->Input->post('adopt') && $this->Input->post('group_' . $field) == 'adopt_modification') {
                             $objWidgetStaging->value = $this->Input->post($field . '_new');
                             $objWidgetStaging->validate();
@@ -163,8 +157,8 @@ class BackendVereinsdatenbankMemberStaging extends BackendModule
                             // Make sure that unique fields are unique (check the eval setting first -> #3063)
                             if ($arrData['eval']['unique'] && $varValue != '') {
                                 $objUnique = $this->Database->prepare("SELECT * FROM tl_member WHERE " . $field . "=? AND id!=?")
-                                    ->limit(1)
-                                    ->execute($varValue, $this->Input->get('id'));
+                                ->limit(1)
+                                ->execute($varValue, $this->Input->get('id'));
 
                                 if ($objUnique->numRows) {
                                     $objWidgetStaging->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], (strlen($arrData['label'][0]) ? $arrData['label'][0] : $field)));
@@ -187,7 +181,7 @@ class BackendVereinsdatenbankMemberStaging extends BackendModule
                                     foreach ($arrData['save_callback'] as $callback) {
                                         $this->import($callback[0]);
                                         try {
-                                            $objUser = $this->Database->prepare('SELECT * FROM tbl_member_staging WHERE pid=?')->execute($this->Input->get('id'));
+                                            $objUser = $this->Database->prepare('SELECT * FROM tl_member WHERE id=?')->execute($this->Input->get('id'));
                                             $objUser->id = $this->Input->get('id');
                                             $varSave = $this->$callback[0]->$callback[1]($varSave, $objUser, $this);
                                         } catch (Exception $e) {
@@ -216,9 +210,9 @@ class BackendVereinsdatenbankMemberStaging extends BackendModule
                     }
                 }
 
-                // Delete dataRecord in tbl_member_staging if there are no errors and the adopt button was clicked
+                // Delete dataRecord in tl_member_staging if there are no errors and the adopt button was clicked
                 if ($this->Input->post('FORM_SUBMIT') == 'member_staging' && $this->Input->post('adopt') && !$hasErrors) {
-                    $this->Database->prepare('DELETE FROM tbl_member_staging WHERE pid=?')->execute($this->Input->get('id'));
+                    $this->Database->prepare('DELETE FROM tl_member_staging WHERE pid=?')->execute($this->Input->get('id'));
                     // redirect to the main page
                     $this->redirect('contao/main.php?do=vdb_member_staging');
                 }

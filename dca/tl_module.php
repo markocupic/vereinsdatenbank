@@ -52,16 +52,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['vdb_editor_email_notification_address
     'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr')
 );
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['vdb_file_upload'] = array
-(
-    'label' => &$GLOBALS['TL_LANG']['tl_module']['vdb_file_upload'],
-    'exclude' => true,
-    'search' => true,
-    'sorting' => true,
-    'flag' => 1,
-    'inputType' => 'upload',
-    'eval' => array('mandatory' => false, 'tl_class' => '', 'extensions' => 'jpg,jpeg,png,gif', 'storeFile' => true, 'uploadFolder' => '', 'feGroup' => 'imageUpload')
-);
+
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['vdb_memberTpl'] = array
 (

@@ -3,23 +3,18 @@
 /**
  * Contao Open Source CMS
  * Copyright (C) 2005-2013 Leo Feyer
- *
  * Formerly known as TYPOlight Open Source CMS.
- *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
  * Software Foundation website at <http://www.gnu.org/licenses/>.
- *
  * PHP version 5
  * @copyright  Leo Feyer 2005-2013
  * @author     Leo Feyer <https://contao.org>
@@ -30,7 +25,6 @@
 
 /**
  * Class BackendVereindsatenbankPersonalData
- *
  * Provide methods administrating club properties.
  * @copyright  Marko Cupic 2013
  * @author     m.cupic@gmx.ch
@@ -118,7 +112,7 @@ class ModuleVereinsdatenbankPersonalData extends Module
         // Build form
         foreach ($this->editable as $field) {
 
-            $arrData = &$GLOBALS['TL_DCA']['tl_member']['fields'][$field];
+            $arrData = $GLOBALS['TL_DCA']['tl_member']['fields'][$field];
 
             // Map checkboxWizard to regular checkbox widget
             if ($arrData['inputType'] == 'checkboxWizard') {
@@ -138,18 +132,17 @@ class ModuleVereinsdatenbankPersonalData extends Module
             $arrData['eval']['required'] = ($this->User->$field == '' && $arrData['eval']['mandatory']) ? true : false;
 
             /***************/
-            // get tablename tl_member || tbl_member_staging
+            // get tablename tl_member || tl_member_staging
             $strTable = $this->getStrTable($field);
             $varValue = $strTable == 'tl_member' ? $this->User->$field : $this->getStagingValue($this->User->id, $field);
             $objWidget = new $strClass($this->prepareForWidget($arrData, $field, $varValue, '', $strTable));
-            //$objWidget = new $strClass($this->prepareForWidget($arrData, $field, $this->User->$field, '', $strTable));
             /***************/
 
             $objWidget->storeValues = true;
             $objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
 
             /***************/
-            if (strpos($arrData['eval']['tl_class'], 'translation')) {
+            if (preg_match('/translation/', $arrData['eval']['tl_class'])) {
                 // Add a special class property if the field is a translation field
                 $objWidget->rowClass .= ' translation';
             }
@@ -180,8 +173,8 @@ class ModuleVereinsdatenbankPersonalData extends Module
                 // Make sure that unique fields are unique (check the eval setting first -> #3063)
                 if ($arrData['eval']['unique'] && $varValue != '') {
                     $objUnique = $this->Database->prepare("SELECT * FROM tl_member WHERE " . $field . "=? AND id!=?")
-                        ->limit(1)
-                        ->execute($varValue, $this->User->id);
+                    ->limit(1)
+                    ->execute($varValue, $this->User->id);
 
                     if ($objUnique->numRows) {
                         $objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], (strlen($arrData['label'][0]) ? $arrData['label'][0] : $field)));
@@ -217,10 +210,8 @@ class ModuleVereinsdatenbankPersonalData extends Module
                     $varSave = is_array($varValue) ? serialize($varValue) : $varValue;
 
                     /***************/
-                    // Save values to tl_member || tbl_member_staging
+                    // Save values to tl_member || tl_member_staging
                     $this->saveField($objWidget, $field, $varSave);
-                    // Save field
-                    // $this->Database->prepare("UPDATE tl_member SET " . $field . "=? WHERE id=?")->execute($varSave, $this->User->id);
                     /***************/
 
                     // HOOK: set new password callback
@@ -235,55 +226,19 @@ class ModuleVereinsdatenbankPersonalData extends Module
 
             $temp = $objWidget->parse();
 
+            /********Append File Uploader to Template*******/
+            if ($field == 'vdb_bild' && strlen($this->vdb_image_folder) && is_dir(TL_ROOT . '/' . $this->vdb_image_folder)) {
+                $temp = $this->generateImageUploader();
+                $strGroup = $arrData['eval']['feGroup'];
+                $hasUpload = true;
+            }
+            /***************/
+
+
             $this->Template->fields .= $temp;
             $arrFields[$strGroup][$field] .= $temp;
             ++$row;
         }
-
-        /********Append File Uploader to Template*******/
-        if (strlen($this->vdb_image_folder)) {
-            $hasUpload = true;
-            $field = 'vdb_file_upload';
-
-            // set the uplaod-folder for the image
-            $arrData = $GLOBALS['TL_DCA']['tl_module']['fields'][$field];
-            $arrData['eval']['uploadFolder'] = $this->vdb_image_folder;
-            $strClass = $GLOBALS['TL_FFL'][$arrData['inputType']];
-            $objWidget = new $strClass($this->prepareForWidget($arrData, $field));
-            unset($fileSRC);
-            if (!is_dir(TL_ROOT . '/' . $this->vdb_image_folder)) {
-                $objWidget->addError('Upload-folder not defined!');
-            } else {
-                if ($_FILES[$field]['name']) {
-                    $ext = pathinfo($_FILES[$field]['name'], PATHINFO_EXTENSION);
-                    $filename = 'vdb_' . time() . '.' . strtolower($ext);
-                    $_FILES[$field]['name'] = $filename;
-                    $fileSRC = $this->vdb_image_folder . '/' . $filename;
-                }
-            }
-            $objWidget->validate();
-            if ($fileSRC && !$objWidget->hasErrors()) {
-                // If all ok, write to db
-                $this->saveField($objWidget, 'vdb_bild', $fileSRC);
-                // tidy up orphaned images
-                $objMaintenance = new VereinsdatenbankMaintenance;
-                $objMaintenance->tidyUpImageFolder($this->vdb_image_folder);
-            }
-            // add uploadfield to template
-            $strGroup = $arrData['eval']['feGroup'];
-            $strTable = $this->getStrTable('vdb_bild');
-            $imgSRC = $strTable == 'tl_member' ? $this->User->vdb_bild : $this->getStagingValue($this->User->id, 'vdb_bild');
-            if ($imgSRC != '' && is_file(TL_ROOT . '/' . $imgSRC)) {
-                $imgHtml = sprintf('<a href="%s" data-lightbox="image">%s</a><br>', $imgSRC, $imgSRC) . '<br>';
-            }
-            $temp = $objWidget->parse();
-
-            $temp = str_replace('<input', $imgHtml . '<input', $temp);
-            $this->Template->fields .= $temp;
-            $arrFields[$strGroup][$field] .= $temp;
-        }
-        /***************/
-
 
 
         $this->Template->hasError = $doNotSubmit;
@@ -302,12 +257,12 @@ class ModuleVereinsdatenbankPersonalData extends Module
         }
 
         /***************/
-        // watch for unconfirmed changes in tbl_member_staging
+        // watch for unconfirmed changes in tl_member_staging
         if ($this->Input->post('FORM_SUBMIT') != 'tl_member_' . $this->id) {
 
-            $objMemberStaging = $this->Database->prepare("SELECT id FROM tbl_member_staging WHERE pid=?")
-                ->executeUncached($this->User->id);
-            if ($objMemberStaging->numRows > 0) {
+            $objMemberStaging = $this->Database->prepare("SELECT id FROM tl_member_staging WHERE pid=?")
+            ->executeUncached($this->User->id);
+            if ($objMemberStaging->numRows) {
                 $this->Template->unconfirmedChanges = true;
             }
         }
@@ -319,7 +274,7 @@ class ModuleVereinsdatenbankPersonalData extends Module
         $this->Template->personalData = $GLOBALS['TL_LANG']['tl_member']['personalData'];
         /********add legends ********/
         $this->Template->activitySectorDetails = $GLOBALS['TL_LANG']['tl_member']['activitySector'];
-        $this->Template->associationProfileDetails = $GLOBALS['TL_LANG']['tl_member']['associatonProfile'];
+        $this->Template->associationProfileDetails = $GLOBALS['TL_LANG']['tl_member']['associationProfile'];
         $this->Template->imageUploadDetails = $GLOBALS['TL_LANG']['tl_member']['imageUpload'];
 
         // Add groups
@@ -362,37 +317,43 @@ class ModuleVereinsdatenbankPersonalData extends Module
         if ($objWidget instanceof FormPassword || $field == 'username') {
             // Save field
             $this->Database->prepare("UPDATE tl_member SET " . $field . "=? WHERE id=?")
-                ->execute($varSave, $this->User->id);
+            ->execute($varSave, $this->User->id);
         } else {
             $arrEditable = $this->editable;
-            if (!in_array('vdb_bild', $arrEditable)) {
-                $arrEditable[] = 'vdb_bild';
-            }
             $objMember = $this->Database->prepare("SELECT * FROM tl_member WHERE id=?")->executeUncached($this->User->id);
-            $objMemberStaging = $this->Database->prepare("SELECT * FROM tbl_member_staging WHERE pid=?")
-                ->executeUncached($this->User->id);
+            $objMemberStaging = $this->Database->prepare("SELECT * FROM tl_member_staging WHERE pid=?")
+            ->executeUncached($this->User->id);
             if ($objMemberStaging->numRows < 1) {
                 // insert only a new row, if there is actualy a change
                 if ($varSave != $objMember->{$field}) {
                     $objMember->reset();
-                    $set = $objMember->fetchAssoc();
-                    $set['tstamp'] = time();
-                    $set['editableFields'] = serialize($arrEditable);
+                    $data = $objMember->fetchAssoc();
+                    // the array is used in some backend modules!!!!
+                    $data['editableFields'] = serialize($arrEditable);
+                    $data[$field] = $varSave;
+
+                    $set = array();
                     $set['pid'] = $this->User->id;
+                    $set['description'] = $this->User->username;
+                    $set['tstamp'] = time();
                     $set['moduleId'] = $this->id;
-                    $set[$field] = $varSave;
-                    unset($set['id']);
-                    $this->Database->prepare("INSERT INTO tbl_member_staging %s")->set($set)->execute();
+                    $set['data'] = serialize($data);
+                    $this->Database->prepare("INSERT INTO tl_member_staging %s")->set($set)->execute();
                 }
             } else {
-                // update tbl_member_staging
+                // update tl_member_staging
+                $data = unserialize($objMemberStaging->data);
+                $data[$field] = $varSave;
+                // the array is used in some backend modules!!!!
+                $data['editableFields'] = serialize($arrEditable);
+
                 $set = array(
                     'tstamp' => time(),
-                    'editableFields' => serialize($arrEditable),
                     'moduleId' => $this->id,
-                    $field => $varSave
+                    'description' => $this->User->username,
+                    'data' => serialize($data)
                 );
-                $this->Database->prepare("UPDATE tbl_member_staging %s WHERE pid=?")->set($set)->executeUncached($this->User->id);
+                $this->Database->prepare("UPDATE tl_member_staging %s WHERE pid=?")->set($set)->executeUncached($this->User->id);
             }
         }
     }
@@ -409,12 +370,12 @@ class ModuleVereinsdatenbankPersonalData extends Module
         if ($field == 'password' || $field == 'username') {
             return 'tl_member';
         } else {
-            $objMember = $this->Database->prepare("SELECT " . $field . " AS fieldcontent FROM tbl_member_staging WHERE pid=?")
-                ->executeUncached($this->User->id);
-            if ($objMember->numRows < 1) {
-                return 'tl_member';
+            $objMember = $this->Database->prepare("SELECT id FROM tl_member_staging WHERE pid=?")
+            ->executeUncached($this->User->id);
+            if ($objMember->numRows) {
+                return 'tl_member_staging';
             } else {
-                return 'tbl_member_staging';
+                return 'tl_member';
             }
         }
     }
@@ -427,11 +388,64 @@ class ModuleVereinsdatenbankPersonalData extends Module
      */
     public function getStagingValue($pid, $field)
     {
-        $objMemberStaging = $this->Database->prepare('SELECT ' . $field . ' AS value FROM tbl_member_staging WHERE pid=?')->execute($pid);
-        return $objMemberStaging->value;
-
+        $objMemberStaging = $this->Database->prepare('SELECT * FROM tl_member_staging WHERE pid=?')->execute($pid);
+        if ($objMemberStaging->numRows) {
+            if ($objMemberStaging->data != '') {
+                $arrMemberStaging = unserialize($objMemberStaging->data);
+                if ($arrMemberStaging[$field] != '') {
+                    return $arrMemberStaging[$field];
+                }
+            }
+        }
     }
 
+    private function generateImageUploader()
+    {
+
+        $field = 'vdb_bild';
+
+        // set the uplaod-folder for the image
+        $arrData = $GLOBALS['TL_DCA']['tl_member']['fields'][$field];
+        $arrData['inputType'] = 'upload';
+        $arrData['eval']['uploadFolder'] = $this->vdb_image_folder;
+        $arrData['eval']['extensions'] = 'jpg,jpeg,png,gif';
+        $arrData['eval']['storeFile'] = true;
+        $arrData['eval']['feGroup'] = 'imageUpload';
+        $arrData['eval']['uploadFolder'] = $this->vdb_image_folder;
+
+        $strClass = $GLOBALS['TL_FFL'][$arrData['inputType']];
+        $objWidget = new $strClass($this->prepareForWidget($arrData, $field));
+        unset($fileSRC);
+        if (!is_dir(TL_ROOT . '/' . $this->vdb_image_folder)) {
+            $objWidget->addError('Upload-folder not defined!');
+        } else {
+            if ($_FILES[$field]['name']) {
+                $ext = pathinfo($_FILES[$field]['name'], PATHINFO_EXTENSION);
+                $filename = 'vdb_' . time() . '.' . strtolower($ext);
+                $_FILES[$field]['name'] = $filename;
+                $fileSRC = $this->vdb_image_folder . '/' . $filename;
+            }
+        }
+        $objWidget->validate();
+        if ($fileSRC && !$objWidget->hasErrors()) {
+
+            // If all ok, write to db
+            $this->saveField($objWidget, $field, $fileSRC);
+            // tidy up orphaned images
+            $objMaintenance = new VereinsdatenbankMaintenance;
+            $objMaintenance->tidyUpImageFolder($this->vdb_image_folder);
+        }
+        // add uploadfield to template
+        $strTable = $this->getStrTable($field);
+        $imgSRC = $strTable == 'tl_member' ? $this->User->{$field} : $this->getStagingValue($this->User->id, $field);
+        if ($imgSRC != '' && is_file(TL_ROOT . '/' . $imgSRC)) {
+            $imgHtml = sprintf('<a href="%s" data-lightbox="image">%s</a><br>', $imgSRC, $imgSRC) . '<br>';
+        }
+        $html = $objWidget->parse();
+
+        $html = str_replace('<input', $imgHtml . '<input', $html);
+        return $html;
+    }
 
 }
 
