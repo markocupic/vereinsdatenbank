@@ -104,13 +104,13 @@
 <?php endif; ?>
 
 
-<?php if (isset($this->agb)): ?>
+<?php if ($this->profile): ?>
 <fieldset>
-<legend><?php echo $this->agbDetails; ?></legend>
+<legend><?php echo $this->profileDetails; ?></legend>
 <?php if (!$this->tableless): ?>
 <table>
 <?php endif; ?>
-<?php foreach ($this->agb as $field) echo $field; ?>
+<?php foreach ($this->profile as $field) echo $field; ?>
 <?php if (!$this->tableless): ?>
 </table>
 <?php endif; ?>
@@ -145,13 +145,13 @@
 </fieldset>
 <?php endif; ?>
 
-<?php if ($this->profile): ?>
+<?php if ($this->agb): ?>
 <fieldset>
 <legend><?php echo $this->agbDetails; ?></legend>
 <?php if (!$this->tableless): ?>
 <table>
 <?php endif; ?>
-<?php foreach ($this->profile as $field) echo $field; ?>
+<?php foreach ($this->agb as $field) echo $field; ?>
 <?php if (!$this->tableless): ?>
 </table>
 <?php endif; ?>

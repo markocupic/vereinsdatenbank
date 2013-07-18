@@ -84,12 +84,14 @@ $GLOBALS['TL_LANG']['tl_member']['vdb_grund_der_loeschung'] = array('Grund der L
 $GLOBALS['TL_LANG']['tl_member']['vdb_passwort_2'] = array('Bestätigung Passwort', '');
 $GLOBALS['TL_LANG']['tl_member']['vdb_file_upload'] = array('Bildupload', '');
 $GLOBALS['TL_LANG']['tl_member']['vdb_agb'] = array('Einverständniserklärung', '');
+
 /**
- * Reference
+ * Frontend Legends
  */
 $GLOBALS['TL_LANG']['tl_member']['activitySector'] = 'Tätigkeitsbereiche';
-$GLOBALS['TL_LANG']['tl_member']['associatonProfile'] = 'Vereinsprofil';
+$GLOBALS['TL_LANG']['tl_member']['associationProfile'] = 'Vereinsprofil';
 $GLOBALS['TL_LANG']['tl_member']['imageUpload'] = 'Bildupload';
+$GLOBALS['TL_LANG']['tl_member']['agb'] = 'Einverständniserklärung';
 
 /**
  * Legends
@@ -97,7 +99,7 @@ $GLOBALS['TL_LANG']['tl_member']['imageUpload'] = 'Bildupload';
 $GLOBALS['TL_LANG']['tl_member']['vdb_address_legend'] = 'VDB-Adressangaben';
 $GLOBALS['TL_LANG']['tl_member']['vdb_activity_sectors_legend'] = 'VDB-Tätigkeitsbereiche';
 $GLOBALS['TL_LANG']['tl_member']['vdb_properties_legend'] = 'VDB-Weitere Angaben';
-$GLOBALS['TL_LANG']['tl_member']['agb'] = 'Einverständniserklärung';
+
 
 
 ?>
