@@ -3,23 +3,18 @@
 /**
  * Contao Open Source CMS
  * Copyright (C) 2005-2013 Leo Feyer
- *
  * Formerly known as TYPOlight Open Source CMS.
- *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
  * Software Foundation website at <http://www.gnu.org/licenses/>.
- *
  * PHP version 5
  * @copyright  Leo Feyer 2005-2013
  * @author     Leo Feyer <https://contao.org>
@@ -30,7 +25,6 @@
 
 /**
  * Class ModuleVereinsdatenbankRegistration
- *
  * Provide methods administrating club properties.
  * @copyright  Marko Cupic 2013
  * @author     m.cupic@gmx.ch
@@ -203,13 +197,14 @@ class ModuleVereinsdatenbankRegistration extends Module
                 // Make sure that unique fields are unique (check the eval setting first -> #3063)
                 if ($arrData['eval']['unique'] && $varValue != '') {
                     $objUnique = $this->Database->prepare("SELECT * FROM tl_member WHERE " . $field . "=?")
-                        ->limit(1)
-                        ->execute($varValue);
+                    ->limit(1)
+                    ->execute($varValue);
 
                     if ($objUnique->numRows) {
                         $objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], (strlen($arrData['label'][0]) ? $arrData['label'][0] : $field)));
                     }
                 }
+
                 /***** check for valid email confirmation  *****/
                 if ($objWidget->rgxp == 'email') {
                     if ($this->Input->post($objWidget->name)) {
@@ -218,7 +213,7 @@ class ModuleVereinsdatenbankRegistration extends Module
                         }
                     }
                 }
-                /****************/
+                /**********************************************/
 
                 // Save callback
                 if (is_array($arrData['save_callback'])) {
@@ -245,17 +240,14 @@ class ModuleVereinsdatenbankRegistration extends Module
             if ($objWidget instanceof uploadable) {
                 $hasUpload = true;
             }
-            /****** generate email confirmation field **********/
-            if ($objWidget->rgxp == 'email') {
 
-                $objWidgetEmailConfirmation = $this->generateEmailConfirmation($objWidget);
-            }
-            /****************/
+
 
             $temp = $objWidget->parse();
 
-            /********add confirmation field to template ********/
-            if ($objWidgetEmailConfirmation) {
+            /********add email confirmation field to template ********/
+            if ($field == 'email') {
+                $objWidgetEmailConfirmation = $this->generateEmailConfirmation($objWidget);
                 $temp .= $objWidgetEmailConfirmation->parse();
                 unset($objWidgetEmailConfirmation);
             }
@@ -272,10 +264,9 @@ class ModuleVereinsdatenbankRegistration extends Module
                     $arrUser['vdb_bild'] = $objWidget->fileSRC;
                 }
                 // add uploadfield to template
-                $strGroup = $arrData['eval']['feGroup'];
                 $temp = $objWidget->parse();
             }
-            /***************/
+            /*********************************************/
 
 
             $this->Template->fields .= $temp;
@@ -286,7 +277,7 @@ class ModuleVereinsdatenbankRegistration extends Module
 
         /******* new member belongs to vdb ************/
         $arrUser['vdb_belongs_to_vdb'] = 1;
-        /*******************/
+        /**********************************************/
 
 
 
@@ -313,12 +304,12 @@ class ModuleVereinsdatenbankRegistration extends Module
         $this->Template->contactDetails = $GLOBALS['TL_LANG']['tl_member']['contactDetails'];
         $this->Template->personalData = $GLOBALS['TL_LANG']['tl_member']['personalData'];
         $this->Template->captchaDetails = $GLOBALS['TL_LANG']['MSC']['securityQuestion'];
-        /********add legends ********/
+        /********add custom legends ********/
         $this->Template->activitySectorDetails = $GLOBALS['TL_LANG']['tl_member']['activitySector'];
         $this->Template->associationProfileDetails = $GLOBALS['TL_LANG']['tl_member']['associationProfile'];
         $this->Template->imageUploadDetails = $GLOBALS['TL_LANG']['tl_member']['imageUpload'];
         $this->Template->agbDetails = $GLOBALS['TL_LANG']['tl_member']['agb'];
-
+        /***********************************/
 
 
         // Add groups
@@ -466,7 +457,7 @@ class ModuleVereinsdatenbankRegistration extends Module
             new Folder($this->reg_homeDir . '/' . $strUserDir);
 
             $this->Database->prepare("UPDATE tl_member SET homeDir=?, assignDir=1 WHERE id=?")
-                ->execute($this->reg_homeDir . '/' . $strUserDir, $insertId);
+            ->execute($this->reg_homeDir . '/' . $strUserDir, $insertId);
         }
 
         // HOOK: send insert ID and user data
@@ -496,8 +487,8 @@ class ModuleVereinsdatenbankRegistration extends Module
 
         // Check the token
         $objMember = $this->Database->prepare("SELECT * FROM tl_member WHERE activation=?")
-            ->limit(1)
-            ->execute($this->Input->get('token'));
+        ->limit(1)
+        ->execute($this->Input->get('token'));
 
         if ($objMember->numRows < 1) {
             $this->Template->type = 'error';
@@ -508,7 +499,7 @@ class ModuleVereinsdatenbankRegistration extends Module
 
         // Update account
         $this->Database->prepare("UPDATE tl_member SET disable='', activation='' WHERE id=?")
-            ->execute($objMember->id);
+        ->execute($objMember->id);
 
         // HOOK: post activation callback
         if (isset($GLOBALS['TL_HOOKS']['activateAccount']) && is_array($GLOBALS['TL_HOOKS']['activateAccount'])) {
@@ -536,8 +527,8 @@ class ModuleVereinsdatenbankRegistration extends Module
         // Redirect to jumpTo page
         if (strlen($this->reg_jumpTo)) {
             $objNextPage = $this->Database->prepare("SELECT id, alias FROM tl_page WHERE id=?")
-                ->limit(1)
-                ->execute($this->reg_jumpTo);
+            ->limit(1)
+            ->execute($this->reg_jumpTo);
 
             if ($objNextPage->numRows) {
                 $this->redirect($this->generateFrontendUrl($objNextPage->fetchAssoc()));
@@ -571,6 +562,12 @@ class ModuleVereinsdatenbankRegistration extends Module
                 continue;
             }
 
+            /************************/
+            if ($k == 'dateAdded') {
+                continue;
+            }
+
+            /************************/
             $v = deserialize($v);
 
             if ($k == 'dateOfBirth' && strlen($v)) {
@@ -588,7 +585,7 @@ class ModuleVereinsdatenbankRegistration extends Module
         }
         $objEmail->sendTo(implode(',', $arrTo));
         /*********************/
-        //$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
+        // $objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
 
         $this->log('A new user (ID ' . $intId . ') has registered on the website', 'ModuleRegistration sendAdminNotification()', TL_ACCESS);
     }
@@ -612,7 +609,6 @@ class ModuleVereinsdatenbankRegistration extends Module
 
         $strClass = $GLOBALS['TL_FFL'][$arrData['inputType']];
         $objWidget = new $strClass($this->prepareForWidget($arrData, $field));
-        unset($fileSRC);
         if (!is_dir(TL_ROOT . '/' . $this->vdb_image_folder)) {
             $objWidget->addError('Upload-folder not defined!');
         } else {
@@ -627,7 +623,6 @@ class ModuleVereinsdatenbankRegistration extends Module
         // return widget object
         return $objWidget;
     }
-
 
 }
 
